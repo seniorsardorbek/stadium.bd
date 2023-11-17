@@ -20,6 +20,7 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { QueryDto } from "./dto/query.stadium.dto";
+import { multerOptions } from "src/shared/multer.options";
 
 @Controller("stadions")
 export class StadionsController {
@@ -28,19 +29,7 @@ export class StadionsController {
   @Post()
   @UsePipes(ValidationPipe)
   @UseInterceptors(
-    FilesInterceptor("images", 10, {
-      storage: diskStorage({
-        destination: "./uploads",
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + "-" + Math.round(Math.random() * 1e9);
-          const originalname = file.originalname;
-          const extension = originalname.split(".").pop();
-          const customFilename = `${uniqueSuffix}.${extension}`;
-          callback(null, customFilename);
-        },
-      }),
-    }),
+    FilesInterceptor("images", 10,multerOptions),
   )
   create(
     @UploadedFiles() images: Array<Express.Multer.File>,

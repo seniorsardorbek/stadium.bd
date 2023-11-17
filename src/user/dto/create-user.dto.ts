@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateUserDto {
   @IsString()
@@ -9,7 +9,5 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
-
-  @IsEnum(["admin", "owner", "player"])
-  role: "admin" | "owner" | "player";
 }
+

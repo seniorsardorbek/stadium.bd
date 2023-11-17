@@ -16,7 +16,7 @@ class Sort {
   @IsEnum(SortOrder)
   order: SortOrder;
 
-  @IsIn([ "created_at"])
+  @IsIn(["rate", "updated_at"])
   by: string;
 }
 

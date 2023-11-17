@@ -23,7 +23,7 @@ export class AuthService {
   ) {}
   async login(request: CustomRequest, data: LoginDto) {
     const { email, password } = data;
-    const user = await this.userModel.findOne({ email, is_deleted: false });
+    const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException(
         "Elektron pochta yoki parolingingiz xato!",

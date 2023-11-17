@@ -15,6 +15,8 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcryptjs";
 import * as XLSX from "xlsx";
 import { JwtService } from "@nestjs/jwt";
+import { unlink } from "fs";
+import { join } from "path";
 const Salt = 15;
 
 @Injectable()
@@ -22,48 +24,54 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
   async list({
     page,
     q,
     sort,
-    filter,
   }: QueryDto): Promise<PaginationResponse<User>> {
     const { limit, offset } = page || {};
     const { by, order = "desc" } = sort || {};
-    const { is_deleted, role } = filter || {};
-console.log(filter);
     const search = q
       ? {
-          name: {
-            $regex: q,
-            $options: "i",
-          },
-        }
+        name: {
+          $regex: q,
+          $options: "i",
+        },
+      }
       : {};
 
     const total = await this.userModel
-      .find({ ...search, ...filter })
+      .find({ ...search })
       .countDocuments();
 
     const data = await this.userModel
-      .find({ ...search, ...filter })
+      .find({ ...search })
       .sort({ [by]: order === "desc" ? -1 : 1 })
       .limit(limit)
       .skip(limit * offset);
     return { limit, offset, total, data };
   }
 
-  async show(id: string): Promise<User> {
+  // ? getone 100%
+  async show(id: string) {
     const user = await this.userModel.findById(id);
     if (!user) {
       throw new NotFoundException("User topilmadi.");
     }
-    return user;
+    return {
+      msg: "Mufaqqiyatli olindi",
+      succes: true,
+      data: user
+    };;
   }
 
-  async create(data: CreateUserDto) {
+  // ? create admin 100%
+  async create(data: CreateUserDto , avatarka : Express.Multer.File) {
     try {
+      if(!avatarka)   throw new BadRequestException(
+        "Profile uchun rasm qatiy!",
+      );
       const exist = await this.userModel.findOne({ email: data.email });
       if (exist) {
         throw new BadRequestException(
@@ -72,11 +80,12 @@ console.log(filter);
       }
       const hash = await bcrypt.hash(data.password, Salt);
       data.password = hash;
-      const user = await this.userModel.create(data);
+      const user = await this.userModel.create({...data , avatarka : avatarka.filename});
       const { _id, role } = user;
       const token = this.jwtService.sign({ _id, role });
       return {
-        message: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+        msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+        succes: true,
         token,
         data: { id: user._id, name: user.name, email: user.email },
       };
@@ -85,7 +94,8 @@ console.log(filter);
     }
   }
 
-  async update(id: string, data: UpdateUserDto): Promise<User> {
+  // ? update 100%
+  async update(id: string, data: UpdateUserDto) {
     const exist = await this.userModel.findById(id);
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
@@ -97,23 +107,35 @@ console.log(filter);
     const user = await this.userModel.findByIdAndUpdate(id, data, {
       new: true,
     });
-    return user;
+    return {
+      msg: "Mufaqqiyatli yangilandi",
+      succes: true,
+      data: user
+    };;
   }
 
-  async delete(id: string): Promise<User> {
+  // ? delete 100%
+  async delete(id: string) {
     const exist = await this.userModel.findById(id);
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
     }
-    const user = await this.userModel.findByIdAndUpdate(
-      id,
-      { is_deleted: true },
-      { new: true },
+    unlink(join(__dirname, "../../", "uploads", exist.avatarka), (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+    }),
+    await this.userModel.findByIdAndDelete(
+      id
     );
-    return user;
+    return {
+      msg: "Mufaqqiyatli o'chirildi",
+      succes: true
+    };
   }
 
-  async exelle(@Res() res: Response) {
+  async exe(@Res() res: Response) {
     const data = await this.userModel.find().exec(); // Fetch data from MongoDB
 
     const jsonData = data.map((item: any) => item.toObject()); // Convert Mongoose documents to plain objects

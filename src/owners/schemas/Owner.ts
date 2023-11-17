@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
-export type UserDocument = HydratedDocument<User>;
+export type OwnerDocument = HydratedDocument<Owner>;
 
 @Schema({
   versionKey: false,
@@ -10,7 +10,7 @@ export type UserDocument = HydratedDocument<User>;
     updatedAt: "updated_at",
   },
 })
-export class User {
+export class Owner {
   @Prop({
     type: String,
     required: true,
@@ -26,19 +26,29 @@ export class User {
   @Prop({
     type: String,
     required: true,
+    unique: true,
+    validate: {
+      validator: function (value) {
+        return /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|33|20)[0-9]{7}$/.test(
+          value
+        );
+      },
+      message: "Invalid phone number format",
+    },
+  })
+  callnumber: string;
+
+  @Prop({
+    type: String,
+    required: true,
   })
   password: string;
 
   @Prop({
     type: String,
-    default: "player",
+    default: "owner",
   })
   role: string;
-  
-  @Prop({
-    type: String,
-  })
-  avatarka: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const OwnerSchema = SchemaFactory.createForClass(Owner);

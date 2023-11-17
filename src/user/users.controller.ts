@@ -11,9 +11,11 @@ import {
   Get,
   Post,
   Patch,
-  Put,
   UsePipes,
   Res,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common/decorators";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { QueryDto } from "./dto/query.dto";
@@ -22,41 +24,45 @@ import { SetRoles } from "src/auth/set-roles.decorator";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { Response } from "express";
 import { HasRole } from "src/auth/has-roles.guard";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { multerOptions } from "src/shared/multer.options";
 @Controller("users")
 @UsePipes(ValidationPipe)
 export class UsersController {
   constructor(private readonly userService: UserService) {}
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn , HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn )
   @Get()
   findAll(@Query() query: QueryDto) {
     return this.userService.list(query);
   }
-  @Get("exellle")
+  @Get("exe")
   async exportToExcel(@Res() res: Response) {
-    return this.userService.exelle(res);
+    return this.userService.exe(res);
   }
 
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.userService.show(id);
   }
-
+  
+  @UseInterceptors(FileInterceptor('avatarka', multerOptions))
   @Post()
-  postUser(@Body() data: CreateUserDto) {
-    return this.userService.create(data);
+  postUser(@Body() data: CreateUserDto ,   @UploadedFile() avatarka: Express.Multer.File) {
+    console.log(avatarka);
+    return this.userService.create(data , avatarka );
   }
-  @Post("admin")
-  postAdmin(@Body() data: CreateUserDto) {
-    return this.userService.create(data);
-  }
+
+
 
   @Patch(":id")
   updateUser(@Param("id") id: string, @Body() data: UpdateUserDto) {
     return this.userService.update(id, data);
   }
-  @Put(":id")
+
+  @Delete(":id")
   deleteUser(@Param("id") id: string) {
+    
     return this.userService.delete(id);
   }
 }
