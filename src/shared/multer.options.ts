@@ -5,10 +5,11 @@ export const multerOptions = {
     storage: diskStorage({
       destination: './uploads',
       filename: (req, file, callback) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const uniqueSuffix = (req.body.name || "minimatch") + '-' + Math.round(Math.random() * 1e5);
         const extension = extname(file.originalname);
         const customFilename = `${uniqueSuffix}${extension}`;
         callback(null, customFilename);
       },
+      
     }),
   };

@@ -3,12 +3,15 @@ import {
   IsMongoId,
   IsNumber,
   IsObject,
+  IsPhoneNumber,
   IsString,
   Length,
   Max,
   Min,
+  isPhoneNumber,
 } from "class-validator";
 import { ObjectId } from "mongoose";
+import { IsImageFile } from "src/shared/image-file.validator";
 
 interface Size {
   h: number;
@@ -27,12 +30,10 @@ export class CreateStadionDto {
   // @Length(3, 10, { message: 'Destination must be between 10 and 500 words.' })
   destination: string;
 
-  @Transform(({ value }) => Number(value))
-  @IsNumber(
-    { allowNaN: false },
-    { message: "Call number must be a valid number." },
-  )
-  callnumber: number;
+
+  @IsPhoneNumber("UZ", { message: 'Invalid phone number format.' ,always : true })
+  callnumber: string;
+
   @Transform(({ value }) => Number(value))
   @IsNumber(
     { allowNaN: false },
@@ -64,4 +65,7 @@ export class CreateStadionDto {
   @IsObject()
   @Transform(({ value }) => Object(value))
   size: Size;
+
+
 }
+

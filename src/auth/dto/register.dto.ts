@@ -1,6 +1,6 @@
-import { IsEmail, IsEnum, IsString } from "class-validator";
+import { IsEmail, IsString } from "class-validator";
 
-export class RegisterDto {
+export class  RegisterDto {
   @IsString()
   name: string;
 
@@ -9,4 +9,6 @@ export class RegisterDto {
 
   @IsString()
   password: string;
+
+  avatarka: Express.Multer.File;
 }

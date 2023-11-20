@@ -29,7 +29,6 @@ export class EventsGateway {
   }
   sendMessage({ to, message, by }) {
     this.eventModule.create({ message, toMessage: to, eventBy: by })
-    // this.sendSMS()
     this.server.emit(`newMessage-${to}`, message);
   }
   async sendSMS() {

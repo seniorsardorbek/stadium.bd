@@ -1,19 +1,18 @@
 import {
   Injectable,
   UnauthorizedException,
-  InternalServerErrorException,
   BadRequestException,
 } from "@nestjs/common";
-import { JwtService, JwtModule } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { LoginDto } from "./dto/login.dto";
 import { Model } from "mongoose";
 import { User } from "src/user/schemas/User";
 import * as bcrypt from "bcryptjs";
-import { CustomRequest, UserDetails } from "src/shared/types/types";
-import { CreateUserDto } from "src/user/dto/create-user.dto";
 import config from "src/shared/config";
 import { RegisterDto } from "./dto/register.dto";
+import { Response } from "express";
+import { deleteFile } from "src/shared/utils";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +20,8 @@ export class AuthService {
     @InjectModel("User") private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
   ) {}
-  async login(request: CustomRequest, data: LoginDto) {
+
+  async login(res: Response, data: LoginDto) {
     const { email, password } = data;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -36,59 +36,44 @@ export class AuthService {
       );
     }
     const { _id, role } = user;
-    const token = await this.jwtService.signAsync(
-      { _id, role },
-      { secret: config.jwt.secret },
-    );
-    return {
-      message: "Mufaqqiyatli kirdingiz!",
+    const token = this.jwtService.sign({ _id, role }, { secret: config.jwt.secret, expiresIn: "7d" })
+    res.send({
+      msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+      success: true,
       token,
-      data: { id: user._id, name: user.name, email: user.email },
-    };
+      data: { id: user._id, name: user.name, email: user.email , avatarka : user.avatarka },
+    })
   }
-  async register(data: RegisterDto) {
+
+  async register(res: Response, data: RegisterDto) {
     try {
+      if (!data.avatarka) throw new BadRequestException({ msg: "Profile uchun rasm qatiy!" })
+      const allowedMimeTypes = ['image/jpeg', 'image/png',];
+      if (!allowedMimeTypes.includes(data.avatarka.mimetype)) {
+        deleteFile('uploads', data.avatarka.filename)
+        throw new BadRequestException({ msg: "Profile uchun rasm formatlari!", allowedMimeTypes })
+      }
       const exist = await this.userModel.findOne({ email: data.email });
       if (exist) {
-        throw new BadRequestException("Username is already used!");
+        deleteFile('uploads', data.avatarka.filename)
+        throw new BadRequestException(
+          "Elektron pochtadan allaqacon foydalanilgan!",
+        );
       }
       const hash = await bcrypt.hash(data.password, 15);
       data.password = hash;
-      const user = await this.userModel.create(data);
+      const user = await this.userModel.create({ ...data, avatarka: data.avatarka.filename });
       const { _id, role } = user;
-      const token = this.jwtService.sign({ _id, role });
-      return {
-        message: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+      const token = this.jwtService.sign({ _id, role }, { secret: config.jwt.secret, expiresIn: "7d" })
+      res.send({
+        msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+        success: true,
         token,
-        data: { id: user._id, name: user.name, email: user.email },
-      };
+        data: { id: user._id, name: user.name, email: user.email , avatarka : user.avatarka },
+      })
+
     } catch (error) {
       throw error;
     }
-  }
-
-  logout(request: CustomRequest) {
-    request.session.destroy((err) => {
-      if (err) {
-        throw new InternalServerErrorException(
-          "Session could not be destroyed",
-        );
-      }
-    });
-  }
-  getAuthenticatedUser(request: CustomRequest): User | undefined {
-    return request.session.user;
-  }
-  async validateUser(details: CreateUserDto) {
-    const user = await this.userModel.findOne({ email: details.email });
-    if (user) {
-      return user;
-    }
-    const { _id, role } = await this.userModel.create(details);
-    return { _id, role };
-  }
-  async findUser(id: number) {
-    const { _id, role } = await this.userModel.findById(id);
-    return { _id, role };
   }
 }

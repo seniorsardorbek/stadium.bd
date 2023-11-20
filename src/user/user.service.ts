@@ -1,30 +1,31 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
   Res,
 } from "@nestjs/common";
 import { User } from "./schemas/User";
 import { Response } from "express";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateUserDto } from "./dto/create-user.dto";
 import { QueryDto } from "./dto/query.dto";
 import { PaginationResponse } from "src/shared/respone";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcryptjs";
 import * as XLSX from "xlsx";
 import { JwtService } from "@nestjs/jwt";
-import { unlink } from "fs";
-import { join } from "path";
+import { deleteFile } from "src/shared/utils";
+import { CustomRequest } from "src/shared/types/types";
 const Salt = 15;
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) { }
+
+
+  // ? get lists100%
   async list({
     page,
     q,
@@ -65,35 +66,20 @@ export class UserService {
       data: user
     };;
   }
-
-  // ? create admin 100%
-  async create(data: CreateUserDto , avatarka : Express.Multer.File) {
-    try {
-      if(!avatarka)   throw new BadRequestException(
-        "Profile uchun rasm qatiy!",
-      );
-      const exist = await this.userModel.findOne({ email: data.email });
-      if (exist) {
-        throw new BadRequestException(
-          "Elektron pochtadan allaqacon foydalanilgan!",
-        );
-      }
-      const hash = await bcrypt.hash(data.password, Salt);
-      data.password = hash;
-      const user = await this.userModel.create({...data , avatarka : avatarka.filename});
-      const { _id, role } = user;
-      const token = this.jwtService.sign({ _id, role });
-      return {
-        msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
-        succes: true,
-        token,
-        data: { id: user._id, name: user.name, email: user.email },
-      };
-    } catch (error) {
-      throw error;
+  async showme(req : CustomRequest) {
+     const {_id} =  req.user
+    const user = await this.userModel.findById(_id).select('email  name avatarka ');
+    if (!user) {
+      throw new NotFoundException("User topilmadi.");
     }
+    return {
+      msg: "Mufaqqiyatli olindi",
+      succes: true,
+      data: user
+    };;
   }
 
+  
   // ? update 100%
   async update(id: string, data: UpdateUserDto) {
     const exist = await this.userModel.findById(id);
@@ -120,12 +106,7 @@ export class UserService {
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
     }
-    unlink(join(__dirname, "../../", "uploads", exist.avatarka), (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    }),
+    deleteFile('uploads' , exist.avatarka)
     await this.userModel.findByIdAndDelete(
       id
     );

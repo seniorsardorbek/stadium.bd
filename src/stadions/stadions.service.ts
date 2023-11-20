@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
@@ -12,7 +12,7 @@ import { QueryDto } from "./dto/query.stadium.dto";
 export class StadionsService {
   constructor(
     @InjectModel(Stadion.name) private stadionModel: Model<Stadion>,
-  ) {}
+  ) { }
   create(data: CreateStadionDto, image: Array<Express.Multer.File>) {
     const images = image.map((el) => {
       return el.filename;
@@ -34,27 +34,26 @@ export class StadionsService {
     const { limit, offset } = page || {};
     const { by, order = "desc" } = sort || {};
     const { lat, lng, maxDistance } = nearby || {};
-console.log(lat , lng);
     const search = q
       ? {
-          description: {
-            $regex: q,
-            $options: "i",
-          },
-        }
+        description: {
+          $regex: q,
+          $options: "i",
+        },
+      }
       : {};
     const isHere = nearby
       ? {
-          loc: {
-            $near: {
-              $geometry: {
-                type: "Point",
-                coordinates: [lat , lng],
-                maxDistance: maxDistance * 1000,
-              },
+        loc: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: [lat, lng],
+              maxDistance: maxDistance * 1000,
             },
           },
-        }
+        },
+      }
       : {};
 
     const total = await this.stadionModel.find({ ...search }).countDocuments();
@@ -70,8 +69,10 @@ console.log(lat , lng);
       .populate("owner", ["name", "email", -"_id"]);
   }
 
+  // ?delete
   async remove(id: string) {
     const exist = await this.stadionModel.findById(id);
+    if (!exist) throw new BadRequestException({ msg: 'Stadion topilmadi!', succes: false })
     exist.images.map((e) =>
       unlink(join(__dirname, "../../", "uploads", e), (err) => {
         if (err) {

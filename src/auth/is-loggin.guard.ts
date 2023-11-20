@@ -1,52 +1,27 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
-import { Request } from "express";
-import { AuthGuard } from "@nestjs/passport";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import config from "src/shared/config";
-interface Session {
-  passport?: {
-    user: {
-      // Define the properties of the 'user' object as needed
-      _id: string;
-      first_name: string;
-      last_name: string;
-      email: string;
-      password: string;
-      is_deleted: boolean;
-      role: string;
-      created_at: string;
-      updated_at: string;
-    };
-  };
-  // Define other properties of the session if needed
-}
+import { AuthGuard } from "@nestjs/passport";
+import { Request } from "express";
 
 @Injectable()
 export class IsLoggedIn implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: config.jwt.secret,
-      });
-      request["user"] = payload;
+      const user = this.jwtService.decode(token,)
+      request["user"] = user;
     } catch (e) {
       throw new UnauthorizedException();
     }
     return true;
   }
+
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(" ") ?? [];
     return type === "Bearer" ? token : undefined;
@@ -60,4 +35,4 @@ export class GoogleAuthGuard extends AuthGuard("google") {
     await super.logIn(requestt);
     return activate;
   }
-}
+} 

@@ -1,10 +1,10 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import * as session from "express-session";
-import * as passport from "passport";
 import { ValidationPipe } from "@nestjs/common";
 import * as express from "express";
 import { join } from "path";
+import config from "./shared/config";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,17 +15,15 @@ async function bootstrap() {
   app.use(express.static(join(__dirname, "..", "uploads")));
   app.use(
     session({
-      secret: "hey",
-      saveUninitialized: false,
+      secret: config.jwt.secret,
+      saveUninitialized: false, 
       resave: false,
       cookie: {
-        maxAge: 60000 * 24,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       },
     }),
   );
-
-  app.use(passport.initialize());
-  app.use(passport.session());
+  
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
