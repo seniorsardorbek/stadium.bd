@@ -3,12 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UsePipes,
   ValidationPipe,
-  UploadedFile,
   UseInterceptors,
   UploadedFiles,
   Query,
@@ -17,15 +15,18 @@ import {
 import { StadionsService } from "./stadions.service";
 import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
-import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { QueryDto } from "./dto/query.stadium.dto";
 import { multerOptions } from "src/shared/multer.options";
+import { SetRoles } from "src/auth/set-roles.decorator";
+import { IsLoggedIn } from "src/auth/is-loggin.guard";
+import { HasRole } from "src/auth/has-roles.guard";
 
 @Controller("stadions")
 export class StadionsController {
   constructor(private readonly stadionsService: StadionsService) {}
-
+  
+  @SetRoles("admin")
+  @UseGuards(IsLoggedIn , HasRole )
   @Post()
   @UsePipes(ValidationPipe)
   @UseInterceptors(
@@ -37,6 +38,7 @@ export class StadionsController {
   ) {
     return this.stadionsService.create(createStadionDto, images);
   }
+
   @Get()
   findAll(@Query() query: QueryDto) {
     return this.stadionsService.findAll(query);
@@ -46,7 +48,8 @@ export class StadionsController {
   findOne(@Param("id") id: string) {
     return this.stadionsService.findOne(id);
   }
-
+  @SetRoles("admin")
+  @UseGuards(IsLoggedIn , HasRole )
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.stadionsService.remove(id);

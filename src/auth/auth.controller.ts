@@ -1,12 +1,9 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   HttpCode,
-  UseGuards,
   HttpStatus,
-  Inject,
   Req,
   UsePipes,
   ValidationPipe,
@@ -16,10 +13,9 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
-import { GoogleAuthGuard, IsLoggedIn } from "./is-loggin.guard";
-import { Request, Response } from "express";
+import {  Response } from "express";
 import { JwtService } from "@nestjs/jwt";
-import { CustomRequest, UserDetails } from "src/shared/types/types";
+import { CustomRequest } from "src/shared/types/types";
 import { RegisterDto } from "./dto/register.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { multerOptions } from "src/shared/multer.options";
@@ -37,10 +33,10 @@ export class AuthController {
   login(@Res() res: Response, @Body() data: LoginDto, @Req() req: CustomRequest) {
     return this.authService.login(res, data);
   }
+
   @Post("register")
   @UseInterceptors(FileInterceptor('avatarka', multerOptions))
   register(@Body() data: RegisterDto , @UploadedFile() avatarka: Express.Multer.File , @Res() res: Response) {
-  
     return this.authService.register(res, {...data, avatarka});
   }
 }

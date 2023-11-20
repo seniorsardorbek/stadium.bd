@@ -42,9 +42,4 @@ export class BookingsController {
   removeMyBooking(@Param("id") id: string, @Req() req: CustomRequest) {
     return this.bookingsService.removeMyBooking(id, req);
   }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.bookingsService.remove(id);
-  // }
 }

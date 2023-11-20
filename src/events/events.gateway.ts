@@ -10,7 +10,6 @@ import { Model } from "mongoose";
 import { Controller, Get, Param, Put, Req, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
 import { CustomRequest } from "src/shared/types/types";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
-import { TwilioService } from "nestjs-twilio";
 
 @WebSocketGateway({
   cors: { origin: "http://localhost:3000", credentials: true },
@@ -18,7 +17,7 @@ import { TwilioService } from "nestjs-twilio";
 })
 export class EventsGateway {
   constructor(
-    @InjectModel(Event.name) private eventModule: Model<Event>, private readonly twilioService: TwilioService
+    @InjectModel(Event.name) private eventModule: Model<Event>
   ) { }
 
   @WebSocketServer()
@@ -31,13 +30,7 @@ export class EventsGateway {
     this.eventModule.create({ message, toMessage: to, eventBy: by })
     this.server.emit(`newMessage-${to}`, message);
   }
-  async sendSMS() {
-    return this.twilioService.client.messages.create({
-      body: 'SMS Body, sent to the phone!',
-      from: "+998916335771",
-      to: '+998916335772',
-    });
-  }
+  
 }
 @Controller('eventss')
 @UsePipes(ValidationPipe)
