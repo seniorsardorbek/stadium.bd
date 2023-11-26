@@ -23,7 +23,7 @@ export class CreateStadionDto {
   owner: ObjectId;
 
   @IsString()
-  @Length(10, 500, { message: "Description must be between 10 and 500 words." })
+  // @Length(10, 500, { message: "Description must be between 10 and 500 words." })
   description: string;
 
   @IsString()

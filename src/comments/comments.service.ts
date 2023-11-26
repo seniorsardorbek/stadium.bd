@@ -4,8 +4,7 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 import { Comment } from "./Schema/comment";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
-import { log } from "console";
-import { CustomRequest, UserDetails } from "src/shared/types/types";
+import { CustomRequest } from "src/shared/types/types";
 
 @Injectable()
 export class CommentsService {
@@ -27,7 +26,7 @@ export class CommentsService {
   findAll(id: mongoose.ObjectId) {
     return this.commentModel
       .find({ post: id })
-      .populate("commentBy", "email name")
+      .populate("commentBy", "email name avatarka")
       .sort({ created_at: -1 });
   }
 

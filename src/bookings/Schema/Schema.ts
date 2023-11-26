@@ -62,8 +62,8 @@ BookingSchema.virtual("stadionInfo", {
   localField: "stadion",
   foreignField: "_id",
   justOne: true,
-  // populate: {
-  //     path: 'owner',
-  //     model: 'User',
-  //   }
+  populate: {
+      path: 'owner',
+      model: 'Owner',
+    }
 });

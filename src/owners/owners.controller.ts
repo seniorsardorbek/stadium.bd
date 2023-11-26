@@ -10,8 +10,8 @@ import { HasRole } from 'src/auth/has-roles.guard';
 @Controller('owners')
 export class OwnersController {
   constructor(private readonly ownersService: OwnersService) {}
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn , HasRole )
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn , HasRole )
   @Post('register')
   register(@Body() createOwnerDto: CreateOwnerDto) {
     return this.ownersService.register(createOwnerDto);
@@ -23,8 +23,8 @@ export class OwnersController {
     return this.ownersService.login(createOwnerDto);
   }
   
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn , HasRole )
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn , HasRole )
   @Get()
   findAll(@Query() query: QueryDto) {
     return this.ownersService.findAll(query);

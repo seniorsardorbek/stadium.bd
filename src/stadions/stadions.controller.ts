@@ -25,8 +25,8 @@ import { HasRole } from "src/auth/has-roles.guard";
 export class StadionsController {
   constructor(private readonly stadionsService: StadionsService) {}
   
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn , HasRole )
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn , HasRole )
   @Post()
   @UsePipes(ValidationPipe)
   @UseInterceptors(

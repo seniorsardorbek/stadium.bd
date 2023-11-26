@@ -70,13 +70,11 @@ export class OwnersService {
       } 
       const hash = await bcrypt.hash(data.password, 15);
       data.password = hash;
-      const owner = await this.ownerModel.create(data);
-      const { _id, role } = owner;
-      const token = this.jwtService.sign({ _id, role });
+      const owner = await this.ownerModel.create(data)
       return {
-        msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
+        msg: "Mufaqqiyatli  ro'yxatdan o'tkazildi!",
         succes: true,
-        token,
+        
         data: { id: owner._id, name: owner.name, email: owner.email , callnumber: owner.callnumber },
       };
     } catch (error) {

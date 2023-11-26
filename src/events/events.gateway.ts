@@ -46,7 +46,7 @@ export class EventsController {
   }
 
   @UseGuards(IsLoggedIn)
-  @Put(':id')
+  @Put('/:id')
   confirm(@Param('id') id: string) {
     return this.eventModule.findByIdAndUpdate(id, { viewed: true });
   }

@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model } from "mongoose";
-import { Stadion, StadionSchema } from "./Schema/Schema";
+import { Model } from "mongoose";
+import { Stadion } from "./Schema/Schema";
 import { PaginationResponse } from "src/shared/respone";
-import { unlink } from "fs";
-import { join } from "path";
 import { QueryDto } from "./dto/query.stadium.dto";
+import { deleteFile } from "src/shared/utils";
 
 @Injectable()
 export class StadionsService {
@@ -14,6 +13,9 @@ export class StadionsService {
     @InjectModel(Stadion.name) private stadionModel: Model<Stadion>,
   ) { }
   create(data: CreateStadionDto, image: Array<Express.Multer.File>) {
+    console.log(data);
+    console.log(image);
+    if (!image?.length) throw new BadRequestException({ msg: " Stadion uchun rasm qatiy!"  , succes : false})
     const images = image.map((el) => {
       return el.filename;
     });
@@ -62,7 +64,7 @@ export class StadionsService {
     return { limit, offset, total, data };
   }
 
-  // !!!!!!!!!!!
+  // ? find One
   findOne(id: string) {
     return this.stadionModel
       .findById(id)
@@ -74,12 +76,7 @@ export class StadionsService {
     const exist = await this.stadionModel.findById(id);
     if (!exist) throw new BadRequestException({ msg: 'Stadion topilmadi!', succes: false })
     exist.images.map((e) =>
-      unlink(join(__dirname, "../../", "uploads", e), (err) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      }),
+      deleteFile('uploads', e)
     );
     return this.stadionModel.findByIdAndRemove(id);
   }

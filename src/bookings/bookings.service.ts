@@ -52,7 +52,7 @@ export class BookingsService {
           path: "stadion",
           populate: {
             path: "owner",
-            model: "User",
+            model: "Owner",
             select: 'name  email '
           },
           select: 'destination callnumber'
@@ -73,7 +73,7 @@ export class BookingsService {
       { new: true },
     );
     if (!confirmed) throw new BadRequestException({ msg: "Ushbu IDli tasdiqlash mavjud emas!" })
-    this.socketService.sendMessage({ to: confirmed.bookingBy, message: `Stadion, ${formatDateWithMonthNames(confirmed.from)} vaqtli o'yin uchun ajrtaildi!`, by: _id })
+    this.socketService.sendMessage({ to: confirmed.bookingBy.toString() , message: `Stadion, ${formatDateWithMonthNames(confirmed.from)} vaqtli o'yin uchun ajrtaildi!`, by: _id })
     return confirmed;
   }
 

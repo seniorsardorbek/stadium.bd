@@ -23,7 +23,7 @@ import { OwnersModule } from './owners/owners.module';
       rootPath: join(__dirname, "..", "upload"), // Adjust the path as needed
     }),
 
-    MongooseModule.forRoot("mongodb://127.0.0.1:27017/mystadion"),
+    MongooseModule.forRoot("mongodb+srv://sardorbekmusilman:Just_password03@cluster0.ysxkkxu.mongodb.net/mystadion"),
     MulterModule.register({
       dest: "./src/uploads",
     }),

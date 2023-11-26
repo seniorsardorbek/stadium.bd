@@ -34,7 +34,7 @@ export class Event {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId, 
-    ref: "User",
+    ref: "Owner",
     required: true,
   })
   eventBy:  mongoose.Schema.Types.ObjectId;
@@ -44,7 +44,7 @@ export class Event {
 export const EventSchema = SchemaFactory.createForClass(Event);
 
 EventSchema.virtual('eventUser' ,{
-  ref:'User',
+  ref:'Owner',
   localField: 'eventBy',
   foreignField: '_id',
   justOne :true

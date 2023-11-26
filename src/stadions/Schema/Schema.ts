@@ -19,7 +19,7 @@ export class Stadion {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId, // Specify the type as mongoose.Schema.Types.ObjectId
-    ref: "User",
+    ref: "Owner",
     required: true,
   })
   owner: mongoose.Schema.Types.ObjectId; // Change the type to mongoose.Schema.Types.ObjectId
@@ -97,7 +97,7 @@ export const StadionSchema = SchemaFactory.createForClass(Stadion);
 StadionSchema.index({ loc: "2dsphere" });
 
 StadionSchema.virtual("ownerInfo", {
-  ref: "User",
+  ref: "Owner",
   localField: "owner",
   foreignField: "_id",
   justOne: true,
