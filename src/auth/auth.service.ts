@@ -36,7 +36,7 @@ export class AuthService {
       );
     }
     const { _id, role } = user;
-    const token = this.jwtService.sign({ _id, role }, { secret: config.jwt.secret, expiresIn: "7d" })
+    const token = this.jwtService.sign({ _id, role }, { secret: "Hey", expiresIn: "7d" })
     res.send({
       msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
       success: true,
@@ -64,7 +64,7 @@ export class AuthService {
       data.password = hash;
       const user = await this.userModel.create({ ...data, avatarka: data.avatarka.filename });
       const { _id, role } = user;
-      const token = this.jwtService.sign({ _id, role }, { secret: config.jwt.secret, expiresIn: "7d" })
+      const token = this.jwtService.sign({ _id, role }, { secret: "Hey", expiresIn: "7d" })
       res.send({
         msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
         success: true,

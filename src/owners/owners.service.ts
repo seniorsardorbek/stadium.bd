@@ -99,7 +99,7 @@ export class OwnersService {
       const { _id, role } = owner;
       const token = await this.jwtService.signAsync(
         { _id, role },
-        { secret: config.jwt.secret },
+        { secret: "Hey" },
       );
       return {
         message: "Mufaqqiyatli kirdingiz!",
