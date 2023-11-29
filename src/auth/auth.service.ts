@@ -12,7 +12,7 @@ import * as bcrypt from "bcryptjs";
 import config from "src/shared/config";
 import { RegisterDto } from "./dto/register.dto";
 import { Response } from "express";
-import { deleteFile } from "src/shared/utils";
+import { deleteFile } from "src/shared/utils/utils";
 
 @Injectable()
 export class AuthService {

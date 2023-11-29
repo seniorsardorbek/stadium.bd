@@ -13,7 +13,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcryptjs";
 import * as XLSX from "xlsx";
 import { JwtService } from "@nestjs/jwt";
-import { deleteFile } from "src/shared/utils";
+import { deleteFile } from "src/shared/utils/utils";
 import { CustomRequest } from "src/shared/types/types";
 const Salt = 15;
 

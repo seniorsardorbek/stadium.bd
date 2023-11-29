@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 import { Stadion } from "./Schema/Schema";
 import { PaginationResponse } from "src/shared/respone";
 import { QueryDto } from "./dto/query.stadium.dto";
-import { deleteFile } from "src/shared/utils";
+import { deleteFile } from "src/shared/utils/utils";
 
 @Injectable()
 export class StadionsService {

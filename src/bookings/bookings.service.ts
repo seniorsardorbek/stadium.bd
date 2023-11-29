@@ -6,7 +6,7 @@ import { Model } from "mongoose";
 import { CustomRequest } from "src/shared/types/types";
 import { EventsGateway } from "src/events/events.gateway";
 import { Stadion } from "src/stadions/Schema/Schema";
-import { formatDateWithMonthNames } from "src/shared/utils";
+import { formatDateWithMonthNames } from "src/shared/utils/utils";
 
 @Injectable()
 
