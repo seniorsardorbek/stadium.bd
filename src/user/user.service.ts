@@ -8,7 +8,7 @@ import { Response } from "express";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { QueryDto } from "./dto/query.dto";
-import { PaginationResponse } from "src/shared/respone";
+import { PaginationResponse } from "src/shared/respone/response";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcryptjs";
 import * as XLSX from "xlsx";

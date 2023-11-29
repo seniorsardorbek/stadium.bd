@@ -8,15 +8,10 @@ export class IsImageFileConstraint implements ValidatorConstraintInterface {
     if (!file) {
       return false;
     }
-
     const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-
     if (!allowedMimeTypes.includes(file.mimetype)) {
       return false;
     }
-
-    // You can add additional checks, such as file size, if needed
-
     return true;
   }
 

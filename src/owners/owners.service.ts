@@ -6,7 +6,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { QueryDto } from 'src/shared/dto/query.dto';
-import { PaginationResponse } from 'src/shared/respone';
+import { PaginationResponse } from 'src/shared/respone/response';
 import * as bcrypt from 'bcryptjs';
 import * as XLSX from 'xlsx';
 import { Response } from 'express';

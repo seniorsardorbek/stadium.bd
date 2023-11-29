@@ -3,7 +3,7 @@ import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Stadion } from "./Schema/Schema";
-import { PaginationResponse } from "src/shared/respone";
+import { PaginationResponse } from "src/shared/respone/response";
 import { QueryDto } from "./dto/query.stadium.dto";
 import { deleteFile } from "src/shared/utils/utils";
 
