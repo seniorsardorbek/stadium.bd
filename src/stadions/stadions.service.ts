@@ -78,6 +78,6 @@ export class StadionsService {
     exist.images.map((e) =>
       deleteFile('uploads', e)
     );
-    return this.stadionModel.findByIdAndRemove(id);
+    return this.stadionModel.findByIdAndDelete(id);
   }
 }

@@ -17,6 +17,7 @@ import { MailModule } from "./mail/mail.module";
 import { EventsModule } from "./events/events.module";
 import { TwilioModule } from "nestjs-twilio";
 import { OwnersModule } from './owners/owners.module';
+import { StatisticsModule } from './statistics/statistics.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -41,6 +42,7 @@ import { OwnersModule } from './owners/owners.module';
     MailModule,
     EventsModule,
     OwnersModule,
+    StatisticsModule,
 
   ],
   controllers: [AppController],

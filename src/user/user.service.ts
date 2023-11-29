@@ -66,12 +66,41 @@ export class UserService {
       data: user
     };;
   }
+
+
+  
   async showme(req : CustomRequest) {
      const {_id} =  req.user
     const user = await this.userModel.findById(_id).select('email  name avatarka ');
     if (!user) {
       throw new NotFoundException("User topilmadi.");
     }
+    return {
+      msg: "Mufaqqiyatli olindi",
+      succes: true,
+      data: user
+    };;
+  }
+  async aMonthUsers() {
+
+    const currentDate = new Date();
+
+// Calculate the first day of the current month
+const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+// Calculate the first day of the next month
+const firstDayOfNextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+console.log(firstDayOfMonth);
+console.log(firstDayOfNextMonth);
+const q = {
+  
+}
+    const user = await this.userModel.find({
+      created_at: {
+        $gte: firstDayOfMonth,
+        $lt: firstDayOfNextMonth
+      }
+    }).select('-password')
     return {
       msg: "Mufaqqiyatli olindi",
       succes: true,

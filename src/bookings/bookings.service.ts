@@ -83,7 +83,7 @@ export class BookingsService {
 
   async removeMyBooking(id: string, req: CustomRequest) {
     const { _id } = req.user;
-    await this.bookingModel.findByIdAndRemove({ bookingBy: _id, _id: id });
+    await this.bookingModel.findOneAndRemove({ bookingBy: _id, _id: id });
     return { msg: "Mufaqqiyatli bekor qilindi!" };
   }
 

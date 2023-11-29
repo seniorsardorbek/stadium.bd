@@ -62,20 +62,20 @@ export class OwnersService {
   // ? create owner 100%
   async register(data: CreateOwnerDto) {
     try {
-      const exist = await this.ownerModel.findOne({ email: data.email , callnumber : data.callnumber });
+      const exist = await this.ownerModel.findOne({ email: data.email, callnumber: data.callnumber });
       if (exist) {
         throw new BadRequestException(
           "Elektron pochtadan yoki mobil raqamdan  allaqacon foydalanilgan!",
         );
-      } 
+      }
       const hash = await bcrypt.hash(data.password, 15);
       data.password = hash;
       const owner = await this.ownerModel.create(data)
       return {
         msg: "Mufaqqiyatli  ro'yxatdan o'tkazildi!",
         succes: true,
-        
-        data: { id: owner._id, name: owner.name, email: owner.email , callnumber: owner.callnumber },
+
+        data: { id: owner._id, name: owner.name, email: owner.email, callnumber: owner.callnumber },
       };
     } catch (error) {
       throw error;

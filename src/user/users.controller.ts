@@ -39,6 +39,13 @@ export class UsersController {
   async exportToExcel(@Res() res: Response) {
     return this.userService.exe(res);
   }
+  @SetRoles("admin")
+  @UseGuards(IsLoggedIn, HasRole)
+
+  @Get("amonth")
+  async aMonthAddedUsers() {
+    return this.userService.aMonthUsers();
+  }
 
   @UseGuards(IsLoggedIn)
   @Get("/me")
@@ -60,7 +67,7 @@ export class UsersController {
     return this.userService.update(id, data);
   }
 
-  @UseGuards(IsLoggedIn  )
+  @UseGuards(IsLoggedIn)
   @Delete(":id")
   deleteUser(@Param("id") id: string) {
     return this.userService.delete(id);
