@@ -9,10 +9,9 @@ import { LoginDto } from "./dto/login.dto";
 import { Model } from "mongoose";
 import { User } from "src/user/schemas/User";
 import * as bcrypt from "bcryptjs";
-import config from "src/shared/config";
 import { RegisterDto } from "./dto/register.dto";
 import { Response } from "express";
-import { deleteFile } from "src/shared/utils/utils";
+// import { deleteFile } from "src/shared/utils/utils";
 
 @Injectable()
 export class AuthService {
@@ -49,17 +48,17 @@ export class AuthService {
     try {
       if (!data.avatarka) throw new BadRequestException({ msg: "Profile uchun rasm qatiy!" })
       const allowedMimeTypes = ['image/jpeg', 'image/png',];
-      if (!allowedMimeTypes.includes(data.avatarka.mimetype)) {
-        deleteFile('uploads', data.avatarka.filename)
-        throw new BadRequestException({ msg: "Profile uchun rasm formatlari!", allowedMimeTypes })
-      }
-      const exist = await this.userModel.findOne({ email: data.email });
-      if (exist) {
-        deleteFile('uploads', data.avatarka.filename)
-        throw new BadRequestException(
-          "Elektron pochtadan allaqacon foydalanilgan!",
-        );
-      }
+      // if (!allowedMimeTypes.includes(data.avatarka.mimetype)) {
+      //   deleteFile('uploads', data.avatarka.filename)
+      //   throw new BadRequestException({ msg: "Profile uchun rasm formatlari!", allowedMimeTypes })
+      // }
+      // const exist = await this.userModel.findOne({ email: data.email });
+      // if (exist) {
+      //   deleteFile('uploads', data.avatarka.filename)
+      //   throw new BadRequestException(
+      //     "Elektron pochtadan allaqacon foydalanilgan!",
+      //   );
+      // }
       const hash = await bcrypt.hash(data.password, 15);
       data.password = hash;
       const user = await this.userModel.create({ ...data, avatarka: data.avatarka.filename });

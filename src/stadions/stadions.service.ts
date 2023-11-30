@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 import { Stadion } from "./Schema/Schema";
 import { PaginationResponse } from "src/shared/respone/response";
 import { QueryDto } from "./dto/query.stadium.dto";
-import { deleteFile } from "src/shared/utils/utils";
+// import { deleteFile } from "src/shared/utils/utils";
 
 @Injectable()
 export class StadionsService {
@@ -75,9 +75,9 @@ export class StadionsService {
   async remove(id: string) {
     const exist = await this.stadionModel.findById(id);
     if (!exist) throw new BadRequestException({ msg: 'Stadion topilmadi!', succes: false })
-    exist.images.map((e) =>
-      deleteFile('uploads', e)
-    );
+    // exist.images.map((e) =>
+    //   deleteFile('uploads', e)
+    // );
     return this.stadionModel.findByIdAndDelete(id);
   }
 }

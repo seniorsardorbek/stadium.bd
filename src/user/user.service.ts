@@ -13,7 +13,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcryptjs";
 import * as XLSX from "xlsx";
 import { JwtService } from "@nestjs/jwt";
-import { deleteFile } from "src/shared/utils/utils";
+// import { deleteFile } from "src/shared/utils/utils";
 import { CustomRequest } from "src/shared/types/types";
 const Salt = 15;
 
@@ -135,14 +135,14 @@ const q = {
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
     }
-    deleteFile('uploads' , exist.avatarka)
-    await this.userModel.findByIdAndDelete(
-      id
-    );
-    return {
-      msg: "Mufaqqiyatli o'chirildi",
-      succes: true
-    };
+    // deleteFile('uploads' , exist.avatarka)
+    // await this.userModel.findByIdAndDelete(
+    //   id
+    // );
+    // return {
+    //   msg: "Mufaqqiyatli o'chirildi",
+    //   succes: true
+    // };
   }
 
   async exe(@Res() res: Response) {

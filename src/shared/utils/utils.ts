@@ -1,5 +1,5 @@
-import { unlink } from "fs";
-import { join } from "path";
+// import { unlink } from "fs";
+// import { join } from "path";
 
 export function formatDateWithMonthNames(timestamp: number) {
   const date = new Date(timestamp);
@@ -17,11 +17,11 @@ export function formatDateWithMonthNames(timestamp: number) {
   return formattedDate;
 }
 
-export function deleteFile(folder: string, name: string): void {
-  unlink(join(__dirname, "../../../", folder, name), (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-  });
-}
+// export function deleteFile(folder: string, name: string): void {
+//   unlink(join(__dirname, "../../../", folder, name), (err) => {
+//     if (err) {
+//       console.error(err);
+//       return;
+//     }
+//   });
+// }
