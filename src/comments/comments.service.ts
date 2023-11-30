@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
-import { Comment } from "./Schema/comment";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { CustomRequest } from "src/shared/types/types";
+import { Comment } from "./Schema/comment";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
 
 @Injectable()
 export class CommentsService {

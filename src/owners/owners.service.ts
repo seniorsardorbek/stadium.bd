@@ -1,23 +1,28 @@
-import { BadRequestException, Injectable, NotFoundException, Res, UnauthorizedException } from '@nestjs/common';
-import { CreateOwnerDto, LoginOwnerDto } from './dto/create-owner.dto';
-import { UpdateOwnerDto } from './dto/update-owner.dto';
-import { Owner } from './schemas/Owner';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { JwtService } from '@nestjs/jwt';
-import { QueryDto } from 'src/shared/dto/query.dto';
-import { PaginationResponse } from 'src/shared/respone/response';
-import * as bcrypt from 'bcryptjs';
-import * as XLSX from 'xlsx';
-import { Response } from 'express';
-import config from 'src/shared/config';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Res,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { InjectModel } from "@nestjs/mongoose";
+import * as bcrypt from "bcryptjs";
+import { Response } from "express";
+import { Model } from "mongoose";
+import { QueryDto } from "src/shared/dto/query.dto";
+import { PaginationResponse } from "src/shared/respone/response";
+import * as XLSX from "xlsx";
+import { CreateOwnerDto, LoginOwnerDto } from "./dto/create-owner.dto";
+import { UpdateOwnerDto } from "./dto/update-owner.dto";
+import { Owner } from "./schemas/Owner";
 
 @Injectable()
 export class OwnersService {
   constructor(
     @InjectModel(Owner.name) private ownerModel: Model<Owner>,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
   async findAll({
     page,
     q,
@@ -27,16 +32,14 @@ export class OwnersService {
     const { by, order = "desc" } = sort || {};
     const search = q
       ? {
-        name: {
-          $regex: q,
-          $options: "i",
-        },
-      }
+          name: {
+            $regex: q,
+            $options: "i",
+          },
+        }
       : {};
 
-    const total = await this.ownerModel
-      .find({ ...search })
-      .countDocuments();
+    const total = await this.ownerModel.find({ ...search }).countDocuments();
 
     const data = await this.ownerModel
       .find({ ...search })
@@ -55,14 +58,17 @@ export class OwnersService {
     return {
       msg: "Mufaqqiyatli olindi",
       succes: true,
-      data: owner
-    };;
+      data: owner,
+    };
   }
 
   // ? create owner 100%
   async register(data: CreateOwnerDto) {
     try {
-      const exist = await this.ownerModel.findOne({ email: data.email, callnumber: data.callnumber });
+      const exist = await this.ownerModel.findOne({
+        email: data.email,
+        callnumber: data.callnumber,
+      });
       if (exist) {
         throw new BadRequestException(
           "Elektron pochtadan yoki mobil raqamdan  allaqacon foydalanilgan!",
@@ -70,12 +76,17 @@ export class OwnersService {
       }
       const hash = await bcrypt.hash(data.password, 15);
       data.password = hash;
-      const owner = await this.ownerModel.create(data)
+      const owner = await this.ownerModel.create(data);
       return {
         msg: "Mufaqqiyatli  ro'yxatdan o'tkazildi!",
         succes: true,
 
-        data: { id: owner._id, name: owner.name, email: owner.email, callnumber: owner.callnumber },
+        data: {
+          id: owner._id,
+          name: owner.name,
+          email: owner.email,
+          callnumber: owner.callnumber,
+        },
       };
     } catch (error) {
       throw error;
@@ -126,8 +137,8 @@ export class OwnersService {
     return {
       msg: "Mufaqqiyatli yangilandi",
       succes: true,
-      data: user
-    };;
+      data: user,
+    };
   }
 
   // ? delete 100%
@@ -136,12 +147,10 @@ export class OwnersService {
     if (!exist) {
       throw new NotFoundException("Owner topilmadi.");
     }
-    await this.ownerModel.findByIdAndDelete(
-      id
-    );
+    await this.ownerModel.findByIdAndDelete(id);
     return {
       msg: "Mufaqqiyatli o'chirildi",
-      succes: true
+      succes: true,
     };
   }
 

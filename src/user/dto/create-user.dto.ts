@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsString } from "class-validator";
 import { IsImageFile } from "src/shared/image-file.validator";
 
 export class CreateUserDto {
@@ -10,8 +10,7 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
-  
-  @IsImageFile({ message: 'File must be a valid image (jpeg, png, gif).' })
+
+  @IsImageFile({ message: "File must be a valid image (jpeg, png, gif)." })
   avatarka: Express.Multer.File;
 }
-

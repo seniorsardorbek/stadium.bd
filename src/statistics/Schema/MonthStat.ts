@@ -25,4 +25,3 @@ export class MonthStat {
 }
 
 export const MonthStatSchema = SchemaFactory.createForClass(MonthStat);
-

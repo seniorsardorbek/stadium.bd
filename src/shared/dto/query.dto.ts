@@ -1,16 +1,14 @@
-import { Transform, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import {
-  IsOptional,
   IsEnum,
-  IsString,
-  ValidateNested,
-  IsNotEmpty,
   IsIn,
   IsObject,
-  IsBoolean,
+  IsOptional,
+  IsString,
+  ValidateNested,
 } from "class-validator";
 import { Paginate } from "src/shared/dto";
-import { SortOrder, UserRole } from "src/shared/enum";
+import { SortOrder } from "src/shared/enum";
 
 class Sort {
   @IsEnum(SortOrder)
@@ -19,8 +17,6 @@ class Sort {
   @IsIn(["rate", "updated_at"])
   by: string;
 }
-
-
 
 export class QueryDto {
   @IsOptional()

@@ -5,28 +5,27 @@ import {
   UseGuards,
   ValidationPipe,
 } from "@nestjs/common";
-import { UserService } from "./user.service";
 import {
   Body,
-  Get,
-  Post,
-  Patch,
-  UsePipes,
-  Res,
   Delete,
+  Get,
+  Patch,
   Req,
+  Res,
+  UsePipes,
 } from "@nestjs/common/decorators";
-import { QueryDto } from "./dto/query.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { SetRoles } from "src/auth/set-roles.decorator";
-import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { Response } from "express";
 import { HasRole } from "src/auth/has-roles.guard";
+import { IsLoggedIn } from "src/auth/is-loggin.guard";
+import { SetRoles } from "src/auth/set-roles.decorator";
 import { CustomRequest } from "src/shared/types/types";
+import { QueryDto } from "./dto/query.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { UserService } from "./user.service";
 @Controller("users")
 @UsePipes(ValidationPipe)
 export class UsersController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @SetRoles("admin")
   @UseGuards(IsLoggedIn, HasRole)
   @Get()
@@ -41,7 +40,6 @@ export class UsersController {
   }
   @SetRoles("admin")
   @UseGuards(IsLoggedIn, HasRole)
-
   @Get("amonth")
   async aMonthAddedUsers() {
     return this.userService.aMonthUsers();
@@ -59,7 +57,6 @@ export class UsersController {
   findOne(@Param("id") id: string) {
     return this.userService.show(id);
   }
-
 
   @UseGuards(IsLoggedIn)
   @Patch(":id")

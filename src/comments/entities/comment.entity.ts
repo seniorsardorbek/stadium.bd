@@ -1,4 +1,4 @@
-import { IsMongoId, IsString, isMongoId } from "class-validator";
+import { IsMongoId, IsString } from "class-validator";
 
 export class Comment {
   @IsString()

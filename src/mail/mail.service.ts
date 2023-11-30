@@ -6,16 +6,15 @@ export class MailService {
   private transporter;
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587, 
-      secure: false, 
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
-        user: "minimatchuz@gmail.com", 
+        user: "minimatchuz@gmail.com",
         pass: "xdhrzomrijijfdyx",
       },
     });
   }
-  
 
   async sendEmail(to: string, subject: string, text: string) {
     const mailOptions = {

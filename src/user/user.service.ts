@@ -1,50 +1,39 @@
-import {
-  Injectable,
-  NotFoundException,
-  Res,
-} from "@nestjs/common";
-import { User } from "./schemas/User";
+import { Injectable, NotFoundException, Res } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { InjectModel } from "@nestjs/mongoose";
+import * as bcrypt from "bcryptjs";
 import { Response } from "express";
 import { Model } from "mongoose";
-import { InjectModel } from "@nestjs/mongoose";
-import { QueryDto } from "./dto/query.dto";
 import { PaginationResponse } from "src/shared/respone/response";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import * as bcrypt from "bcryptjs";
-import * as XLSX from "xlsx";
-import { JwtService } from "@nestjs/jwt";
-// import { deleteFile } from "src/shared/utils/utils";
 import { CustomRequest } from "src/shared/types/types";
+import { deleteFile } from "src/shared/utils/utils";
+import * as XLSX from "xlsx";
+import { QueryDto } from "./dto/query.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { User } from "./schemas/User";
 const Salt = 15;
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly jwtService: JwtService
-  ) { }
-
+    private readonly jwtService: JwtService,
+  ) {}
 
   // ? get lists100%
-  async list({
-    page,
-    q,
-    sort,
-  }: QueryDto): Promise<PaginationResponse<User>> {
+  async list({ page, q, sort }: QueryDto): Promise<PaginationResponse<User>> {
     const { limit, offset } = page || {};
     const { by, order = "desc" } = sort || {};
     const search = q
       ? {
-        name: {
-          $regex: q,
-          $options: "i",
-        },
-      }
+          name: {
+            $regex: q,
+            $options: "i",
+          },
+        }
       : {};
 
-    const total = await this.userModel
-      .find({ ...search })
-      .countDocuments();
+    const total = await this.userModel.find({ ...search }).countDocuments();
 
     const data = await this.userModel
       .find({ ...search })
@@ -63,52 +52,58 @@ export class UserService {
     return {
       msg: "Mufaqqiyatli olindi",
       succes: true,
-      data: user
-    };;
+      data: user,
+    };
   }
 
-
-  
-  async showme(req : CustomRequest) {
-     const {_id} =  req.user
-    const user = await this.userModel.findById(_id).select('email  name avatarka ');
+  async showme(req: CustomRequest) {
+    const { _id } = req.user;
+    const user = await this.userModel
+      .findById(_id)
+      .select("email  name avatarka ");
     if (!user) {
       throw new NotFoundException("User topilmadi.");
     }
     return {
       msg: "Mufaqqiyatli olindi",
       succes: true,
-      data: user
-    };;
+      data: user,
+    };
   }
   async aMonthUsers() {
-
     const currentDate = new Date();
 
-// Calculate the first day of the current month
-const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    // Calculate the first day of the current month
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1,
+    );
 
-// Calculate the first day of the next month
-const firstDayOfNextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-console.log(firstDayOfMonth);
-console.log(firstDayOfNextMonth);
-const q = {
-  
-}
-    const user = await this.userModel.find({
-      created_at: {
-        $gte: firstDayOfMonth,
-        $lt: firstDayOfNextMonth
-      }
-    }).select('-password')
+    // Calculate the first day of the next month
+    const firstDayOfNextMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1,
+    );
+    console.log(firstDayOfMonth);
+    console.log(firstDayOfNextMonth);
+    const q = {};
+    const user = await this.userModel
+      .find({
+        created_at: {
+          $gte: firstDayOfMonth,
+          $lt: firstDayOfNextMonth,
+        },
+      })
+      .select("-password");
     return {
       msg: "Mufaqqiyatli olindi",
       succes: true,
-      data: user
-    };;
+      data: user,
+    };
   }
 
-  
   // ? update 100%
   async update(id: string, data: UpdateUserDto) {
     const exist = await this.userModel.findById(id);
@@ -125,8 +120,8 @@ const q = {
     return {
       msg: "Mufaqqiyatli yangilandi",
       succes: true,
-      data: user
-    };;
+      data: user,
+    };
   }
 
   // ? delete 100%
@@ -135,14 +130,12 @@ const q = {
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
     }
-    // deleteFile('uploads' , exist.avatarka)
-    // await this.userModel.findByIdAndDelete(
-    //   id
-    // );
-    // return {
-    //   msg: "Mufaqqiyatli o'chirildi",
-    //   succes: true
-    // };
+    deleteFile("uploads", exist.avatarka);
+    await this.userModel.findByIdAndDelete(id);
+    return {
+      msg: "Mufaqqiyatli o'chirildi",
+      succes: true,
+    };
   }
 
   async exe(@Res() res: Response) {

@@ -11,8 +11,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix("api");
   app.use(express.static(join(__dirname, "..", "uploads")));
- 
-  
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

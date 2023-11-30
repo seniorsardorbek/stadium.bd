@@ -1,17 +1,15 @@
 import { Transform, Type } from "class-transformer";
 import {
-  IsOptional,
   IsEnum,
+  IsIn,
+  IsNumber,
+  IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
-  IsNotEmpty,
-  IsIn,
-  IsObject,
-  IsBoolean,
-  IsNumber,
 } from "class-validator";
 import { Paginate } from "src/shared/dto";
-import { SortOrder, UserRole } from "src/shared/enum";
+import { SortOrder } from "src/shared/enum";
 
 class Sort {
   @IsEnum(SortOrder)

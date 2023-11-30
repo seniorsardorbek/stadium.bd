@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
 import { HasRole } from "src/auth/has-roles.guard";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { SetRoles } from "src/auth/set-roles.decorator";
@@ -8,7 +20,9 @@ import * as createBookingDto from "./dto/create-booking.dto";
 @Controller("bookings")
 @UsePipes(ValidationPipe)
 export class BookingsController {
-  constructor(private readonly bookingsService: bookingsService_1.BookingsService) { }
+  constructor(
+    private readonly bookingsService: bookingsService_1.BookingsService,
+  ) {}
 
   @UseGuards(IsLoggedIn)
   @Post()

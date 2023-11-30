@@ -1,11 +1,16 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 
 @Injectable()
 export class IsLoggedIn implements CanActivate {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
@@ -14,7 +19,7 @@ export class IsLoggedIn implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const user = this.jwtService.decode(token,)
+      const user = this.jwtService.decode(token);
       request["user"] = user;
     } catch (e) {
       throw new UnauthorizedException();
@@ -35,4 +40,4 @@ export class GoogleAuthGuard extends AuthGuard("google") {
     await super.logIn(requestt);
     return activate;
   }
-} 
+}

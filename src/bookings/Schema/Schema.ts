@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
-import { timeINterface } from "src/shared/types/types";
 
 export type BookingDocument = HydratedDocument<Booking>;
 
@@ -63,7 +62,7 @@ BookingSchema.virtual("stadionInfo", {
   foreignField: "_id",
   justOne: true,
   populate: {
-      path: 'owner',
-      model: 'Owner',
-    }
+    path: "owner",
+    model: "Owner",
+  },
 });

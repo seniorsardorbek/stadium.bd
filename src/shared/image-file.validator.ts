@@ -1,21 +1,23 @@
+import {
+  ValidationArguments,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  registerDecorator,
+} from "class-validator";
 
-
-import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments, registerDecorator, ValidationOptions } from 'class-validator';
-
-@ValidatorConstraint({ name: 'avatarka', async: false })
+@ValidatorConstraint({ name: "avatarka", async: false })
 export class IsImageFileConstraint implements ValidatorConstraintInterface {
   validate(file: Express.Multer.File, args: ValidationArguments) {
     if (!file) {
       return false;
     }
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
     if (!allowedMimeTypes.includes(file.mimetype)) {
       return false;
     }
     return true;
   }
-
-
 }
 
 export function IsImageFile(validationOptions?: ValidationOptions) {

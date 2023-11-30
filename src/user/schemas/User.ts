@@ -34,7 +34,7 @@ export class User {
     default: "player",
   })
   role: string;
-  
+
   @Prop({
     type: String,
   })

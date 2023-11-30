@@ -11,41 +11,38 @@ export type EventDocument = HydratedDocument<Event>;
   },
 })
 export class Event {
-
-
   @Prop({
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   })
-  toMessage: mongoose.Schema.Types.ObjectId; 
+  toMessage: mongoose.Schema.Types.ObjectId;
 
   @Prop({
     type: String,
     required: true,
   })
-  message: mongoose.Schema.Types.String; 
+  message: mongoose.Schema.Types.String;
 
   @Prop({
     type: Boolean,
     default: false,
   })
-  viewed: mongoose.Schema.Types.Boolean; 
+  viewed: mongoose.Schema.Types.Boolean;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Owner",
     required: true,
   })
-  eventBy:  mongoose.Schema.Types.ObjectId;
-  
+  eventBy: mongoose.Schema.Types.ObjectId;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
 
-EventSchema.virtual('eventUser' ,{
-  ref:'Owner',
-  localField: 'eventBy',
-  foreignField: '_id',
-  justOne :true
-})
+EventSchema.virtual("eventUser", {
+  ref: "Owner",
+  localField: "eventBy",
+  foreignField: "_id",
+  justOne: true,
+});
