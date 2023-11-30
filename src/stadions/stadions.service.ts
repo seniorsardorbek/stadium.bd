@@ -11,6 +11,7 @@ export class StadionsService {
   constructor(
     @InjectModel(Stadion.name) private stadionModel: Model<Stadion>,
   ) { }
+  
   create(data: CreateStadionDto, image: Array<Express.Multer.File>) {
     if (!image?.length)
       throw new BadRequestException({
@@ -24,6 +25,12 @@ export class StadionsService {
       ...data,
       images,
       loc: { type: "Point", coordinates: [data?.lat, data?.lng] },
+    }).catch((err) =>{
+      images.map((e) => deleteFile("uploads", e));
+      throw new BadRequestException({
+        msg :"Ma'lumotlar bilan xatolik bor ",
+        succes : false
+      })
     });
     return newdata;
   }
@@ -45,7 +52,7 @@ export class StadionsService {
         },
       }
       : {};
-      
+
     const isHere = nearby
       ? {
         loc: {
