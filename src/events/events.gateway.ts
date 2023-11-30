@@ -21,7 +21,7 @@ import { CustomRequest } from "src/shared/types/types";
 import { Event } from "./Schema/Schema";
 
 @WebSocketGateway({
-  cors: { origin: "http://localhost:3000", credentials: true },
+  cors: { origin: "*", credentials: true },
   namespace: "events",
 })
 export class EventsGateway {
