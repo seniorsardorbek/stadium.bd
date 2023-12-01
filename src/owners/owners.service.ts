@@ -110,7 +110,7 @@ export class OwnersService {
       const { _id, role } = owner;
       const token = await this.jwtService.signAsync(
         { _id, role },
-        { secret: "Hey" },
+        { secret: config.jwt.secret },
       );
       return {
         message: "Mufaqqiyatli kirdingiz!",

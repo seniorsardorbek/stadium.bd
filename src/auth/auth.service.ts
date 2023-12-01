@@ -37,7 +37,7 @@ export class AuthService {
     const { _id, role } = user;
     const token = this.jwtService.sign(
       { _id, role },
-      { secret: "Hey", expiresIn: "7d" },
+      { secret: config.jwt.secret, expiresIn: "7d" },
     );
     res.send({
       msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",
@@ -80,7 +80,7 @@ export class AuthService {
       const { _id, role } = user;
       const token = this.jwtService.sign(
         { _id, role },
-        { secret: "Hey", expiresIn: "7d" },
+        { secret: config.jwt.secret, expiresIn: "7d" },
       );
       res.send({
         msg: "Mufaqqiyatli  ro'yxatdan o'tdingiz!",

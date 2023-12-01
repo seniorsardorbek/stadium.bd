@@ -9,7 +9,7 @@ import { AuthService } from "./auth.service";
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.register({
       global: true,
-      secret: "Hey",
+      secret: config.jwt.secret,
       signOptions: { expiresIn: "7d" },
     }),
   ],
