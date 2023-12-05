@@ -16,7 +16,7 @@ import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { SetRoles } from "src/auth/set-roles.decorator";
 import { CustomRequest } from "src/shared/types/types";
 import * as bookingsService_1 from "./bookings.service";
-import * as createBookingDto from "./dto/create-booking.dto";
+import { CreateBookingDto } from "./dto/create-booking.dto";
 @Controller("bookings")
 @UsePipes(ValidationPipe)
 export class BookingsController {
@@ -27,10 +27,10 @@ export class BookingsController {
   @UseGuards(IsLoggedIn)
   @Post()
   async create(
-    @Body() createBookingDto: createBookingDto.CreateBookingDto,
+    @Body() data: CreateBookingDto,
     @Req() req: CustomRequest,
   ) {
-    const newBooking = await this.bookingsService.create(createBookingDto, req);
+    const newBooking = await this.bookingsService.create(data, req);
     return newBooking;
   }
 
@@ -48,8 +48,8 @@ export class BookingsController {
   @SetRoles("owner")
   @UseGuards(IsLoggedIn, HasRole)
   @Put(":id")
-  confirmed(@Req() req: CustomRequest, @Param("id") id: string) {
-    return this.bookingsService.confirmed(req, id);
+  confirmed(@Req() req: CustomRequest, @Param("id") id: string , @Body() StatusBookingDto) {
+    return this.bookingsService.confirmed(req, id , StatusBookingDto );
   }
   @UseGuards(IsLoggedIn)
   @Delete("one/:id")

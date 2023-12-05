@@ -16,6 +16,7 @@ import * as XLSX from "xlsx";
 import { CreateOwnerDto, LoginOwnerDto } from "./dto/create-owner.dto";
 import { UpdateOwnerDto } from "./dto/update-owner.dto";
 import { Owner } from "./schemas/Owner";
+import config from "src/shared/config";
 
 @Injectable()
 export class OwnersService {

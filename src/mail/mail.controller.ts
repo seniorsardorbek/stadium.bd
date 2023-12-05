@@ -7,11 +7,11 @@ export class EmailController {
 
   @Post("send")
   async sendEmail(
-    @Body() emailData: { to: string; subject: string; text: string },
+    @Body() emailData: { to: string; subject: string; text: string ; html : string },
   ) {
     try {
-      const { to, subject, text } = emailData;
-      const info = await this.emailService.sendEmail(to, subject, text);
+      const { to, subject, text , html } = emailData;
+      const info = await this.emailService.sendEmail(to, subject, text , html);
       return { message: "Email sent successfully", info };
     } catch (error) {
       return { message: "Failed to send email", error: error.message };

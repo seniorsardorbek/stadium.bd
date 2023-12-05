@@ -3,7 +3,8 @@ export enum SortOrder {
   DESC = "desc",
 }
 
-export enum UserRole {
-  ADMIN = "admin",
-  PLAYER = "player",
+export enum BookingStatus {
+  PENDING = "pending",
+  REJECTED = "rejected",
+  CONFIRMED = 'confirmed'
 }

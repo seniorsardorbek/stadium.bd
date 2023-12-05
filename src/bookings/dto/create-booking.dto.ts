@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsBoolean, IsMongoId, IsNumber, IsString } from "class-validator";
+import { IsEnum, IsMongoId, IsNumber, IsPhoneNumber } from "class-validator";
 import mongoose from "mongoose";
 
 export class CreateBookingDto {
@@ -9,19 +9,23 @@ export class CreateBookingDto {
   @Transform(({ value }) => Number(value))
   @IsNumber()
   from: number;
-  @Transform(({ value }) => Number(value))
-  @IsNumber()
-  callNumber: number;
-
-  // @Transform(({ value }) => {
-  //     if (value === 'true') return true;
-  //     else if (value === 'false') return false;
-  //     return value;
-  //   })
-  // @IsBoolean()
-  // confirmed: boolean
+  @IsPhoneNumber("UZ", {
+    message: "Invalid phone number format.",
+    always: true,
+  })
+  callnumber: string;
 
   // @Transform(({ value }) => Number(value))
   // @IsNumber()
   // to: number
+}
+export class StatusBookingDto {
+
+  @Transform(({ value }) => {
+      if (value === 'true') return true;
+      else if (value === 'false') return false;
+      return value;
+    })
+  @IsEnum(['confirmed' , "rejected"  , 'pending' ])
+  status: 'confirmed' | 'rejected' | "pending"
 }

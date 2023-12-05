@@ -1,5 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { IsNotEmpty } from "class-validator";
 import mongoose, { HydratedDocument } from "mongoose";
+import { IsPhoneNumber } from "src/shared/dto";
+import { BookingStatus } from "src/shared/enum";
 
 export type BookingDocument = HydratedDocument<Booking>;
 
@@ -31,16 +34,15 @@ export class Booking {
   })
   from: number;
   @Prop({
-    type: Boolean,
-    default: false,
+    type: String,
+    required : true ,
+    default: 'pending',
   })
-  confirmed: boolean;
+  status: BookingStatus;
 
-  @Prop({
-    type: Number,
-    required: true,
-  })
-  callNumber: number;
+  @IsNotEmpty()
+  @IsPhoneNumber({ message: 'Invalid phone number format.' })
+  callnumber: string;
 
   // @Prop({
   //     type: Number,

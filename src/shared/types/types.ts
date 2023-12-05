@@ -14,3 +14,9 @@ export interface timeINterface {
   date: string;
   time: string;
 }
+
+
+export interface Size {
+  h: number;
+  w: number;
+}

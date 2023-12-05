@@ -6,7 +6,7 @@ import { CustomRequest } from "src/shared/types/types";
 import { formatDateWithMonthNames } from "src/shared/utils/utils";
 import { Stadion } from "src/stadions/Schema/Schema";
 import { Booking } from "./Schema/Schema";
-import { CreateBookingDto } from "./dto/create-booking.dto";
+import { CreateBookingDto, StatusBookingDto } from "./dto/create-booking.dto";
 
 @Injectable()
 export class BookingsService {
@@ -14,16 +14,15 @@ export class BookingsService {
     @InjectModel(Booking.name) private bookingModel: Model<Booking>,
     @InjectModel(Stadion.name) private stadionModel: Model<Stadion>,
     private socketService: EventsGateway, // private
-  ) {}
-  async create(createBookingDto: CreateBookingDto, req: CustomRequest) {
+  ) { }
+  async create(data: CreateBookingDto, req: CustomRequest) {
     const { _id } = req.user;
     const exist = await this.bookingModel.find({
-      stadion: createBookingDto.stadion,
-      from: createBookingDto.from,
-      confirmed: true,
+      stadion: data.stadion,
+      from: data.from,
     });
     const { owner } = await this.stadionModel.findById(
-      createBookingDto.stadion,
+      data.stadion,
     );
 
     if (exist[0]) {
@@ -31,8 +30,8 @@ export class BookingsService {
         msg: "Bu vaqtda stadion bron qilingan!",
       });
     }
-    const data = await this.bookingModel.create({
-      ...createBookingDto,
+    await this.bookingModel.create({
+      ...data,
       bookingBy: _id,
     });
 
@@ -48,7 +47,7 @@ export class BookingsService {
   findOnePersonBookings(req: CustomRequest) {
     const { _id } = req.user;
     return this.bookingModel
-      .find({ bookingBy: _id })
+      .find({ bookingBy: _id  })
       .populate([
         {
           path: "stadion",
@@ -67,11 +66,11 @@ export class BookingsService {
       .exec();
   }
 
-  async confirmed(req: CustomRequest, id: string) {
+  async confirmed(req: CustomRequest, id: string, data: StatusBookingDto) {
     const { _id } = req.user;
     const confirmed = await this.bookingModel.findByIdAndUpdate(
       id,
-      { confirmed: true },
+      { ...data },
       { new: true },
     );
     if (!confirmed)
@@ -89,11 +88,15 @@ export class BookingsService {
   }
 
   findOneStadions(id: string) {
-    return this.bookingModel.find({ stadion: id, confirmed: true });
+    return this.bookingModel.find({ stadion: id,  });
   }
 
   async removeMyBooking(id: string, req: CustomRequest) {
     const { _id } = req.user;
+    const isPossible = await this.bookingModel.find({ _id: id, status: 'confirmed' })
+    if (!isPossible) {
+      throw new BadRequestException({ msg: 'Stadion tasdiqlangan, Bu holatda siz ochira olmaysiz!', succes: false })
+    }
     await this.bookingModel.findOneAndRemove({ bookingBy: _id, _id: id });
     return { msg: "Mufaqqiyatli bekor qilindi!" };
   }

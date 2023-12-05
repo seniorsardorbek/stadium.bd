@@ -47,4 +47,10 @@ export class AuthController {
   ) {
     return this.authService.register(res, { ...data, avatarka });
   }
+
+  
+  @Post('verify-email')
+  async verifyEmail(@Body('email') email: string, @Body('code') code: string): Promise<any> {
+    return  this.authService.verifyEmail(email, code);
+  }
 }

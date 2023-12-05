@@ -34,6 +34,16 @@ export class User {
     default: "player",
   })
   role: string;
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isVerified: boolean;
+  @Prop({
+    type: String,
+    required : true
+  })
+  verificationCode: string;
 
   @Prop({
     type: String,
