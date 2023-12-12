@@ -18,7 +18,7 @@ import { multerOptions } from "src/shared/multer.options";
 import { CustomRequest } from "src/shared/types/types";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
-import { RegisterDto } from "./dto/register.dto";
+import { RegisterDto, VerifyDto } from "./dto/register.dto";
 
 @Controller("auth")
 @UsePipes(ValidationPipe)
@@ -48,9 +48,13 @@ export class AuthController {
     return this.authService.register(res, { ...data, avatarka });
   }
 
-  
+
   @Post('verify-email')
-  async verifyEmail(@Body('email') email: string, @Body('code') code: string): Promise<any> {
-    return  this.authService.verifyEmail(email, code);
+  async verifyEmail(@Body() data : VerifyDto  ): Promise<any> {
+    return  this.authService.verifyEmail(data);
+  }
+  @Post('resend-code')
+  async resendCode(@Body() {email} : {email: string}  ): Promise<any> {
+    return  this.authService.resendCode(email);
   }
 }

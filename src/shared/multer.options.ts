@@ -1,4 +1,5 @@
-import { diskStorage } from "multer";
+import { MulterModuleOptions } from "@nestjs/platform-express";
+import multer, { diskStorage } from "multer";
 import { extname } from "path";
 
 export const multerOptions = {
@@ -11,5 +12,9 @@ export const multerOptions = {
       const customFilename = `${uniqueSuffix}${extension}`;
       callback(null, customFilename);
     },
-  }),
+    
+  }
+  ),
+  
 };
+

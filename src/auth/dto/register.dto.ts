@@ -1,4 +1,5 @@
-import { IsEmail, IsString } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsEmail, IsNumber, IsString } from "class-validator";
 
 export class RegisterDto {
   @IsString()
@@ -11,4 +12,13 @@ export class RegisterDto {
   password: string;
 
   avatarka: Express.Multer.File;
+}
+export class VerifyDto {
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  code: number;
+
+  @IsEmail()
+  email: string;
+
 }

@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Query,
+  Req,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -20,6 +21,7 @@ import { multerOptions } from "src/shared/multer.options";
 import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { QueryDto } from "./dto/query.stadium.dto";
 import { StadionsService } from "./stadions.service";
+import { CustomRequest } from "src/shared/types/types";
 
 @Controller("stadions")
 export class StadionsController {
@@ -31,10 +33,11 @@ export class StadionsController {
   @UsePipes(ValidationPipe)
   @UseInterceptors(FilesInterceptor("images", 10, multerOptions))
   create(
+    @Req() req : CustomRequest ,
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() createStadionDto: CreateStadionDto,
+    @Body() createStadionDto,
   ) {
-    return this.stadionsService.create(createStadionDto, images);
+    return this.stadionsService.create(createStadionDto, images );
   }
 
   @Get()

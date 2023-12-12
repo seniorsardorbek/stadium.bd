@@ -43,7 +43,7 @@ export class OwnersService {
     const total = await this.ownerModel.find({ ...search }).countDocuments();
 
     const data = await this.ownerModel
-      .find({ ...search })
+      .find({ ...search }).select('-password')
       .sort({ [by]: order === "desc" ? -1 : 1 })
       .limit(limit)
       .skip(limit * offset);

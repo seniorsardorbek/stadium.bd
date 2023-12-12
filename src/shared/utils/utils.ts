@@ -32,7 +32,6 @@ export function formatDateWithMonthNames(timestamp: number) {
 export function deleteFile(folder: string, name: string): void {
   unlink(join(__dirname, "../../../", folder, name), (err) => {
     if (err) {
-      console.error(err);
       return;
     }
   });

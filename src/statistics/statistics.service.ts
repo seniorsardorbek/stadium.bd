@@ -25,12 +25,14 @@ export class StatisticsService {
     const usersCount = await this.usersModul.count();
     const ownersCount = await this.ownersModule.count();
     const bookingCount = await this.bookingsModule.count();
+    const stadiumsCount = await this.bookingsModule.count();
     return {
       succes: true,
       counts: {
         bookingCount,
         usersCount,
         ownersCount,
+        stadiumsCount
       },
     };
   }
@@ -73,8 +75,6 @@ export class StatisticsService {
         59,
         999,
       );
-      console.log(startOfLastMonth);
-      console.log(endOfLastMonth);
       const countUsers = await this.usersModul.count({
         created_at: {
           $gte: startOfLastMonth,
@@ -90,7 +90,6 @@ export class StatisticsService {
       });
       this.statisticsModel.create({ field: "bookings", count: countBookings });
     } catch (error) {
-      console.log(error);
     }
   }
 }

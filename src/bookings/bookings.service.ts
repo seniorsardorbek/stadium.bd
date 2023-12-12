@@ -88,7 +88,7 @@ export class BookingsService {
   }
 
   findOneStadions(id: string) {
-    return this.bookingModel.find({ stadion: id,  });
+    return this.bookingModel.find({ stadion: id, status : 'confirmed'  });
   }
 
   async removeMyBooking(id: string, req: CustomRequest) {

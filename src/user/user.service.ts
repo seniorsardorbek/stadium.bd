@@ -86,8 +86,6 @@ export class UserService {
       currentDate.getMonth() + 1,
       1,
     );
-    console.log(firstDayOfMonth);
-    console.log(firstDayOfNextMonth);
     const q = {};
     const user = await this.userModel
       .find({

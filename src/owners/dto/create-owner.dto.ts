@@ -1,4 +1,5 @@
 import { IsString } from "class-validator";
+import { IsPhoneNumber } from "src/shared/dto";
 
 export class CreateOwnerDto {
   @IsString()
@@ -10,7 +11,7 @@ export class CreateOwnerDto {
   @IsString()
   password: string;
 
-  @IsString()
+  @IsPhoneNumber({ message: 'Invalid phone number format.' })
   callnumber: string;
 }
 export class LoginOwnerDto {
