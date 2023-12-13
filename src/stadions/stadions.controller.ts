@@ -18,10 +18,10 @@ import { HasRole } from "src/auth/has-roles.guard";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
 import { SetRoles } from "src/auth/set-roles.decorator";
 import { multerOptions } from "src/shared/multer.options";
-import { CreateStadionDto } from "./dto/create-stadion.dto";
 import { QueryDto } from "./dto/query.stadium.dto";
 import { StadionsService } from "./stadions.service";
 import { CustomRequest } from "src/shared/types/types";
+import { CreateStadionDto } from "./dto/create-stadion.dto";
 
 @Controller("stadions")
 export class StadionsController {
@@ -35,9 +35,9 @@ export class StadionsController {
   create(
     @Req() req : CustomRequest ,
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() createStadionDto,
+    @Body() data : CreateStadionDto,
   ) {
-    return this.stadionsService.create(createStadionDto, images );
+    return this.stadionsService.create(data, images );
   }
 
   @Get()

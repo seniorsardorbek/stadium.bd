@@ -29,7 +29,8 @@ export class StadionsService {
       images.map((e) => deleteFile("uploads", e));
       throw new BadRequestException({
         msg :"Ma'lumotlar bilan xatolik bor ",
-        succes : false
+        succes : false ,
+        err: err.message
       })
     });
     return newdata;
