@@ -12,6 +12,14 @@ interface Config {
   jwt: {
     secret: string;
   };
+  transporter :{
+     host :  string ,
+     port : number ,
+     auth :{
+      user : string ,
+      pass : string
+     }
+  }
 }
 
 const config: Config = {
@@ -26,6 +34,14 @@ const config: Config = {
   jwt: {
     secret: process.env.JWT_SECRET!,
   },
+  transporter :{
+    host :  process.env.TRANS_HOST  ,
+    port : parseInt(process.env.TRANS_PORT) ,
+    auth :{
+     user : process.env.TRANS_USER ,
+     pass : process.env.TRANS_PASS
+    }
+ }
 };
 
 export default config;

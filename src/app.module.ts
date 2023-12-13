@@ -15,14 +15,15 @@ import { OwnersModule } from "./owners/owners.module";
 import { StadionsModule } from "./stadions/stadions.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserModule } from "./user/user.module";
+import config from "./shared/config";
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "upload"), // Adjust the path as needed
+      rootPath: join(__dirname, "..", "upload"),
     }),
 
     MongooseModule.forRoot(
-      "mongodb+srv://sardorbekmusilman:Just_password03@cluster0.ysxkkxu.mongodb.net/mystadion",
+      `mongodb+srv://sardorbekmusilman:Just_password03@cluster0.ysxkkxu.mongodb.net/${config.db.name}`,
     ),
     MulterModule.register({
       dest: "./src/uploads",
