@@ -22,7 +22,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post("login")
   login(
-    @Body() data: LoginDto,
+    @Body() data: {code :  number},
   ) {
     return this.authService.login( data);
   }

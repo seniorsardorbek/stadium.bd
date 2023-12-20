@@ -15,15 +15,15 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) { }
 
-  async login( data: LoginDto) {
-    const {code} = data
-    const exist  = await this.userModel.findOne({verification : code }).select('name ')
-    if(!exist){
-      throw  new BadRequestException({msg :  'Xatolik'})
+  async login(data: LoginDto) {
+    const { code } = data
+    const exist = await this.userModel.findOne({ verification: code }).select('name ')
+    if (!exist) {
+      throw new BadRequestException({ msg: 'Tasdiqlash kodi xato!' })
     }
-    const token = this.jwtService.sign({role :  exist.role , id : exist._id})
+    const token = this.jwtService.sign({ role: exist.role, _id: exist._id })
     return {
-      token  ,
+      token,
       data: exist
     }
   }

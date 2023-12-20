@@ -22,7 +22,7 @@ export class TelegrefController {
     console.log();
     const {first_name} = ctx.message.from
 
-    const htmlTemplate = '<b>Hello, {{name}}!</b>';
+    const htmlTemplate = '<b>Ey, Assalom alaykum  {{name}}!</b>';
     const template = Handlebars.compile(htmlTemplate);
     const renderedHtml = template({ name: first_name });
     await ctx.replyWithHTML(renderedHtml, {
@@ -52,7 +52,7 @@ export class TelegrefController {
     const exist = await this.userModel.findOne({ phonenumber: phone_number })
     if (exist) {
       
-      const htmlTemplate ='Exist! - Code : <span  class="tg-spoiler"> {{code}}!</span>';
+      const htmlTemplate ='Vayyo siz oldin ruyxatdan o\'tkan ekansiz, meeeyli yana qayta beraman! - Code : <span  class="tg-spoiler"> {{code}}!</span>';
       const template = Handlebars.compile(htmlTemplate);
       const renderedHtml = template({ code: rdm });
       await this.userModel.findOneAndUpdate({ phonenumber: phone_number }, { verification: rdm })
@@ -60,7 +60,7 @@ export class TelegrefController {
         reply_markup: { remove_keyboard: true },
       });
     } else {
-      const htmlTemplate ='Thanks! - Code: <span  class="tg-spoiler"> {{code}}!</span>';
+      const htmlTemplate ='Bro, Xush Kelibsiz! - Code: <span  class="tg-spoiler"> {{code}}!</span>';
       const template = Handlebars.compile(htmlTemplate);
       const renderedHtml = template({ code: rdm });
       await this.userModel.create({ phonenumber: phone_number, name: first_name, role: "player", chatId: user_id, verification: rdm })
@@ -71,13 +71,13 @@ export class TelegrefController {
   }
 
 
-  @On('user_shared')
+  @On('photo')
   async onn(@Ctx() ctx: TelegrafContext) {
-    await ctx.reply('👍');
+    await ctx.reply('Iyaaa, rasmni siz tashladizmi?');
   }
 
-  @Hears('hi')
+  @On('text')
   async hears(@Ctx() ctx: TelegrafContext) {
-    await ctx.reply('Hey there');
+    await ctx.reply('Bekorchilikni bas qiling!');
   }
 }
