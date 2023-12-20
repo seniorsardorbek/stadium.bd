@@ -5,7 +5,6 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { MailService } from "src/mail/mail.service";
 import { User } from "src/user/schemas/User";
 import { LoginDto } from "./dto/login.dto";
 
@@ -13,7 +12,7 @@ import { LoginDto } from "./dto/login.dto";
 export class AuthService {
   constructor(
     @InjectModel("User") private readonly userModel: Model<User>,
-    private readonly jwtService: JwtService, private mailService: MailService
+    private readonly jwtService: JwtService
   ) { }
 
   async login( data: LoginDto) {

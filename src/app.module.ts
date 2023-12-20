@@ -10,7 +10,6 @@ import { AuthModule } from "./auth/auth.module";
 import { BookingsModule } from "./bookings/bookings.module";
 import { CommentsModule } from "./comments/comments.module";
 import { EventsModule } from "./events/events.module";
-import { MailModule } from "./mail/mail.module";
 import { OwnersModule } from "./owners/owners.module";
 import { StadionsModule } from "./stadions/stadions.module";
 import { StatisticsModule } from "./statistics/statistics.module";
@@ -34,15 +33,12 @@ import { TelegrafModule } from "nestjs-telegraf";
       token: '6831641712:AAECquuFPVUsc2wzmI5ClEc09nOfyX803Dc',
       include: [],
     }) ,
-    MailModule,
-    PassportModule.register({ session: true }),
     StadionsModule,
     UserModule,
     TelegrafModulee ,
     AuthModule,
     CommentsModule,
     BookingsModule,
-    MailModule,
     EventsModule,
     OwnersModule,
     StatisticsModule,
