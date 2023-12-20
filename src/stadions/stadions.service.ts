@@ -75,7 +75,7 @@ export class StadionsService {
   findOne(id: string) {
     return this.stadionModel
       .findById(id)
-      .populate("owner", ["name", "email", -"_id"]);
+      .populate("owner", ["name", "phonenumber", -"_id"]);
   }
 
   // ?delete

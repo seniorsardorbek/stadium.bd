@@ -128,12 +128,6 @@ export class UserService {
     if (!exist) {
       throw new NotFoundException("User topilmadi.");
     }
-    deleteFile("uploads", exist.avatarka);
-    await this.userModel.findByIdAndDelete(id);
-    return {
-      msg: "Mufaqqiyatli o'chirildi",
-      succes: true,
-    };
   }
 
   async exe(@Res() res: Response) {

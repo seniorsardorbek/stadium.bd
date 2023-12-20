@@ -1,4 +1,5 @@
 import { ObjectId } from "mongoose";
+import { Context } from "telegraf";
 
 export type UserDetails = {
   role: string;
@@ -10,6 +11,9 @@ export interface CustomRequest extends Request {
   user: any;
 }
 
+export interface  TelegrafContext extends  Context{
+  message :any
+}
 export interface timeINterface {
   date: string;
   time: string;

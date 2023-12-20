@@ -19,36 +19,27 @@ export class User {
 
   @Prop({
     type: String,
-    required : true
+    unique: true
   })
-  email: string;
+  phonenumber: string;
+  @Prop({
+    type: Number,
+    required: true,
+    unique: true
+  })
+  verification: number;
 
   @Prop({
-    type: String,
-    required: true,
+    type: Number,
+    required: true
   })
-  password: string;
+  chatId: number;
 
   @Prop({
     type: String,
     default: "player",
   })
   role: string;
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  isVerified: boolean;
-  @Prop({
-    type: String,
-    required : true
-  })
-  verificationCode: string;
-
-  @Prop({
-    type: String,
-  })
-  avatarka: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
