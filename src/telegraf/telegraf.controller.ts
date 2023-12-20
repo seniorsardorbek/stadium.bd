@@ -52,7 +52,7 @@ export class TelegrefController {
     const exist = await this.userModel.findOne({ phonenumber: phone_number })
     if (exist) {
       
-      const htmlTemplate ='Vayyo siz oldin ruyxatdan o\'tkan ekansiz, meeeyli yana qayta beraman! - Code : <span  class="tg-spoiler"> {{code}}!</span>';
+      const htmlTemplate ='Vayyo siz oldin ruyxatdan o\'tkan ekansiz! - Code : <span  class="tg-spoiler"> {{code}}!</span>';
       const template = Handlebars.compile(htmlTemplate);
       const renderedHtml = template({ code: rdm });
       await this.userModel.findOneAndUpdate({ phonenumber: phone_number }, { verification: rdm })
