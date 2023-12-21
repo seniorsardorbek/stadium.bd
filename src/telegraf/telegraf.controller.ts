@@ -22,7 +22,7 @@ export class TelegrefController {
     console.log();
     const {first_name} = ctx.message.from
 
-    const htmlTemplate = '<b>Ey, Assalom alaykum  {{name}}!</b>';
+    const htmlTemplate = '<b> Assalom alaykum  {{name}}!</b>';
     const template = Handlebars.compile(htmlTemplate);
     const renderedHtml = template({ name: first_name });
     await ctx.replyWithHTML(renderedHtml, {
