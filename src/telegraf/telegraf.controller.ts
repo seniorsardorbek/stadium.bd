@@ -30,7 +30,7 @@ export class TelegrefController {
         keyboard: [
           [
             {
-              text: 'Kontakt ulashamiz!',
+              text: 'Kontakt ulashing!',
               request_contact: true
             },
           ],
