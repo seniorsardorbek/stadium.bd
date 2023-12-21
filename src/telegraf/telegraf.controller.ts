@@ -78,6 +78,6 @@ export class TelegrefController {
 
   @On('text')
   async hears(@Ctx() ctx: TelegrafContext) {
-    await ctx.reply('Bekorchilikni bas qiling!!!!');
+    await ctx.reply('Bekorchilikni bas qiling!');
   }
 }
