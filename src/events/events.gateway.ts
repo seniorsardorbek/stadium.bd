@@ -35,12 +35,13 @@ export class EventsGateway {
 
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {
+    this.server.emit(`newMessage-${1}`, "are you oke?");
     return "Hello world!";
   }
 
   sendMessage({ to, message, by }) {
     this.eventModule.create({ message, toMessage: to, eventBy: by });
-    4;
+  
     console.log(message);
 
     this.server.emit(`newMessage-${to}`, message);
