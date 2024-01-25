@@ -75,7 +75,7 @@ export class Stadion {
     type: Number,
     required: true,
   })
-  year : number
+  year: number;
   @Prop({
     type: Number,
     required: true,

@@ -32,7 +32,7 @@ export class StatisticsService {
         bookingCount,
         usersCount,
         ownersCount,
-        stadiumsCount
+        stadiumsCount,
       },
     };
   }
@@ -89,7 +89,6 @@ export class StatisticsService {
         },
       });
       this.statisticsModel.create({ field: "bookings", count: countBookings });
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 }

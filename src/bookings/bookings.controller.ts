@@ -26,10 +26,7 @@ export class BookingsController {
 
   @UseGuards(IsLoggedIn)
   @Post()
-  async create(
-    @Body() data: CreateBookingDto,
-    @Req() req: CustomRequest,
-  ) {
+  async create(@Body() data: CreateBookingDto, @Req() req: CustomRequest) {
     const newBooking = await this.bookingsService.create(data, req);
     return newBooking;
   }
@@ -48,8 +45,12 @@ export class BookingsController {
   @SetRoles("owner")
   @UseGuards(IsLoggedIn, HasRole)
   @Put(":id")
-  confirmed(@Req() req: CustomRequest, @Param("id") id: string , @Body() StatusBookingDto) {
-    return this.bookingsService.confirmed(req, id , StatusBookingDto );
+  confirmed(
+    @Req() req: CustomRequest,
+    @Param("id") id: string,
+    @Body() StatusBookingDto,
+  ) {
+    return this.bookingsService.confirmed(req, id, StatusBookingDto);
   }
   @UseGuards(IsLoggedIn)
   @Delete("one/:id")

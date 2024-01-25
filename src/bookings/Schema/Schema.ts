@@ -35,13 +35,13 @@ export class Booking {
   from: number;
   @Prop({
     type: String,
-    required : true ,
-    default: 'pending',
+    required: true,
+    default: "pending",
   })
   status: BookingStatus;
 
   @IsNotEmpty()
-  @IsPhoneNumber({ message: 'Invalid phone number format.' })
+  @IsPhoneNumber({ message: "Invalid phone number format." })
   callnumber: string;
 
   // @Prop({

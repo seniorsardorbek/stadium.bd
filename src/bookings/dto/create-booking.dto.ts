@@ -20,12 +20,11 @@ export class CreateBookingDto {
   // to: number
 }
 export class StatusBookingDto {
-
   @Transform(({ value }) => {
-      if (value === 'true') return true;
-      else if (value === 'false') return false;
-      return value;
-    })
-  @IsEnum(['confirmed' , "rejected"  , 'pending' ])
-  status: 'confirmed' | 'rejected' | "pending"
+    if (value === "true") return true;
+    else if (value === "false") return false;
+    return value;
+  })
+  @IsEnum(["confirmed", "rejected", "pending"])
+  status: "confirmed" | "rejected" | "pending";
 }

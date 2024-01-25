@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TelegrafController } from './telegraf.controller';
-import { TelegrafService } from './telegraf.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { TelegrafController } from "./telegraf.controller";
+import { TelegrafService } from "./telegraf.service";
 
-describe('TelegrafController', () => {
+describe("TelegrafController", () => {
   let controller: TelegrafController;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('TelegrafController', () => {
     controller = module.get<TelegrafController>(TelegrafController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

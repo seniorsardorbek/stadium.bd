@@ -10,7 +10,10 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import {
-  SubscribeMessage ,  AbstractWsAdapter ,BaseWsExceptionFilter ,ConnectedSocket,
+  SubscribeMessage,
+  AbstractWsAdapter,
+  BaseWsExceptionFilter,
+  ConnectedSocket,
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
@@ -34,9 +37,10 @@ export class EventsGateway {
   handleMessage(client: any, payload: any): string {
     return "Hello world!";
   }
-  
+
   sendMessage({ to, message, by }) {
-    this.eventModule.create({ message, toMessage: to, eventBy: by });4
+    this.eventModule.create({ message, toMessage: to, eventBy: by });
+    4;
     console.log(message);
 
     this.server.emit(`newMessage-${to}`, message);

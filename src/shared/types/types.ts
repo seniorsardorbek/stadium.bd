@@ -11,14 +11,13 @@ export interface CustomRequest extends Request {
   user: any;
 }
 
-export interface  TelegrafContext extends  Context{
-  message :any
+export interface TelegrafContext extends Context {
+  message: any;
 }
 export interface timeINterface {
   date: string;
   time: string;
 }
-
 
 export interface Size {
   h: number;

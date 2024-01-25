@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { PassportModule } from "@nestjs/passport";
 import { MulterModule } from "@nestjs/platform-express";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
@@ -14,7 +13,7 @@ import { OwnersModule } from "./owners/owners.module";
 import { StadionsModule } from "./stadions/stadions.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserModule } from "./user/user.module";
-import {  TelegrafModulee } from './telegraf/telegraf.module';
+import { TelegrafModulee } from "./telegraf/telegraf.module";
 import config from "./shared/config";
 import { TelegrafModule } from "nestjs-telegraf";
 @Module({
@@ -22,20 +21,19 @@ import { TelegrafModule } from "nestjs-telegraf";
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "upload"),
     }),
-
     MongooseModule.forRoot(
-      `mongodb+srv://sardorbekmusilman:Just_password03@cluster0.ysxkkxu.mongodb.net/${config.db.name}`,
+      `${config.db.host}/${config.db.name}`,
     ),
     MulterModule.register({
-      dest: "./src/uploads",
+      dest: "./uploads",
     }),
     TelegrafModule.forRoot({
-      token: '6831641712:AAECquuFPVUsc2wzmI5ClEc09nOfyX803Dc',
+      token: "6831641712:AAECquuFPVUsc2wzmI5ClEc09nOfyX803Dc",
       include: [],
-    }) ,
+    }),
     StadionsModule,
     UserModule,
-    TelegrafModulee ,
+    TelegrafModulee,
     AuthModule,
     CommentsModule,
     BookingsModule,

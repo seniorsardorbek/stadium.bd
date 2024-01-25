@@ -14,16 +14,14 @@ export class BookingsService {
     @InjectModel(Booking.name) private bookingModel: Model<Booking>,
     @InjectModel(Stadion.name) private stadionModel: Model<Stadion>,
     private socketService: EventsGateway, // private
-  ) { }
+  ) {}
   async create(data: CreateBookingDto, req: CustomRequest) {
     const { _id } = req.user;
     const exist = await this.bookingModel.find({
       stadion: data.stadion,
       from: data.from,
     });
-    const { owner } = await this.stadionModel.findById(
-      data.stadion,
-    );
+    const { owner } = await this.stadionModel.findById(data.stadion);
 
     if (exist[0]) {
       throw new BadRequestException({
@@ -47,7 +45,7 @@ export class BookingsService {
   findOnePersonBookings(req: CustomRequest) {
     const { _id } = req.user;
     return this.bookingModel
-      .find({ bookingBy: _id  })
+      .find({ bookingBy: _id })
       .populate([
         {
           path: "stadion",
@@ -88,14 +86,20 @@ export class BookingsService {
   }
 
   findOneStadions(id: string) {
-    return this.bookingModel.find({ stadion: id, status : 'confirmed'  });
+    return this.bookingModel.find({ stadion: id, status: "confirmed" });
   }
 
   async removeMyBooking(id: string, req: CustomRequest) {
     const { _id } = req.user;
-    const isPossible = await this.bookingModel.find({ _id: id, status: 'confirmed' })
+    const isPossible = await this.bookingModel.find({
+      _id: id,
+      status: "confirmed",
+    });
     if (!isPossible) {
-      throw new BadRequestException({ msg: 'Stadion tasdiqlangan, Bu holatda siz ochira olmaysiz!', succes: false })
+      throw new BadRequestException({
+        msg: "Stadion tasdiqlangan, Bu holatda siz ochira olmaysiz!",
+        succes: false,
+      });
     }
     await this.bookingModel.findOneAndRemove({ bookingBy: _id, _id: id });
     return { msg: "Mufaqqiyatli bekor qilindi!" };

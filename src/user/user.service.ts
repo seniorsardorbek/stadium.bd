@@ -1,26 +1,20 @@
 import { Injectable, NotFoundException, Res } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
-import * as bcrypt from "bcryptjs";
 import { Response } from "express";
 import { Model } from "mongoose";
 import { PaginationResponse } from "src/shared/respone/response";
 import { CustomRequest } from "src/shared/types/types";
-import { deleteFile } from "src/shared/utils/utils";
 import * as XLSX from "xlsx";
 import { QueryDto } from "./dto/query.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./schemas/User";
 const Salt = 15;
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
-    private readonly jwtService: JwtService,
-  ) {}
+    @InjectModel(User.name) private userModel: Model<User>) {}
 
-  // ? get lists100%
+
   async list({ page, q, sort }: QueryDto): Promise<PaginationResponse<User>> {
     const { limit, offset } = page || {};
     const { by, order = "desc" } = sort || {};
@@ -36,7 +30,7 @@ export class UserService {
     const total = await this.userModel.find({ ...search }).countDocuments();
 
     const data = await this.userModel
-      .find({ ...search })
+      .find( {  ...search })
       .sort({ [by]: order === "desc" ? -1 : 1 })
       .limit(limit)
       .skip(limit * offset);
@@ -60,7 +54,7 @@ export class UserService {
     const { _id } = req.user;
     const user = await this.userModel
       .findById(_id)
-      .select("email  name avatarka ");
+      .select("name phonenumber");
     if (!user) {
       throw new NotFoundException("User topilmadi.");
     }
@@ -70,17 +64,16 @@ export class UserService {
       data: user,
     };
   }
+
+  
   async aMonthUsers() {
     const currentDate = new Date();
-
-    // Calculate the first day of the current month
     const firstDayOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       1,
     );
 
-    // Calculate the first day of the next month
     const firstDayOfNextMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
@@ -102,33 +95,16 @@ export class UserService {
     };
   }
 
-  // ? update 100%
-  async update(id: string, data: UpdateUserDto) {
-    const exist = await this.userModel.findById(id);
-    if (!exist) {
-      throw new NotFoundException("User topilmadi.");
-    }
-    if (data.password) {
-      const hash = await bcrypt.hash(data.password, Salt);
-      data.password = hash;
-    }
-    const user = await this.userModel.findByIdAndUpdate(id, data, {
-      new: true,
-    });
-    return {
-      msg: "Mufaqqiyatli yangilandi",
-      succes: true,
-      data: user,
-    };
-  }
 
-  // ? delete 100%
+
   async delete(id: string) {
     const exist = await this.userModel.findById(id);
     if (!exist) {
-      throw new NotFoundException("User topilmadi.");
+      throw new NotFoundException("Foydalanuvchi topilmadi.");
     }
   }
+
+
 
   async exe(@Res() res: Response) {
     const data = await this.userModel.find().exec(); // Fetch data from MongoDB

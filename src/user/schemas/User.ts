@@ -19,19 +19,19 @@ export class User {
 
   @Prop({
     type: String,
-    unique: true
+    unique: true,
   })
   phonenumber: string;
   @Prop({
     type: Number,
     required: true,
-    unique: true
+    unique: true,
   })
   verification: number;
 
   @Prop({
     type: Number,
-    required: true
+    required: true,
   })
   chatId: number;
 

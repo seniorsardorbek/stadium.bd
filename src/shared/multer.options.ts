@@ -12,9 +12,5 @@ export const multerOptions = {
       const customFilename = `${uniqueSuffix}${extension}`;
       callback(null, customFilename);
     },
-    
-  }
-  ),
-  
+  }),
 };
-

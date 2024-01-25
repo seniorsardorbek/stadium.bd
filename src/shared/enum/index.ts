@@ -6,5 +6,5 @@ export enum SortOrder {
 export enum BookingStatus {
   PENDING = "pending",
   REJECTED = "rejected",
-  CONFIRMED = 'confirmed'
+  CONFIRMED = "confirmed",
 }

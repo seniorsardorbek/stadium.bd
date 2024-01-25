@@ -1,5 +1,16 @@
 import { Transform } from "class-transformer";
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, Min, ValidationArguments, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator } from "class-validator";
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  Min,
+  ValidationArguments,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  registerDecorator,
+} from "class-validator";
 
 export class Paginate {
   @IsOptional()
@@ -26,12 +37,11 @@ export class Filter {
   is_deleted: boolean;
 }
 
-
-
-@ValidatorConstraint({ name: 'isPhoneNumber', async: false })
+@ValidatorConstraint({ name: "isPhoneNumber", async: false })
 class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {
-    const phoneNumberRegex = /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|78|33|20)[0-9]{7}$/;
+    const phoneNumberRegex =
+      /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|78|33|20)[0-9]{7}$/;
     return phoneNumberRegex.test(value);
   }
 
@@ -51,5 +61,3 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
     });
   };
 }
-
-

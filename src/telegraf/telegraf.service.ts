@@ -1,14 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTelegrafDto } from './dto/create-telegraf.dto';
-import { UpdateTelegrafDto } from './dto/update-telegraf.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateTelegrafDto } from "./dto/create-telegraf.dto";
+import { UpdateTelegrafDto } from "./dto/update-telegraf.dto";
 
 @Injectable()
 export class TelegrafService {
-
-
-
   create(createTelegrafDto: CreateTelegrafDto) {
-    return 'This action adds a new telegraf';
+    return "This action adds a new telegraf";
   }
 
   findAll() {

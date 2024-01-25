@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Post,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
@@ -21,11 +21,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post("login")
-  login(
-    @Body() data: {code :  number},
-  ) {
-    return this.authService.login( data);
+  login(@Body() data: { code: number }) {
+    return this.authService.login(data);
   }
-
-
 }

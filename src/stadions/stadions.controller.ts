@@ -33,11 +33,11 @@ export class StadionsController {
   @UsePipes(ValidationPipe)
   @UseInterceptors(FilesInterceptor("images", 10, multerOptions))
   create(
-    @Req() req : CustomRequest ,
+    @Req() req: CustomRequest,
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() data : CreateStadionDto,
+    @Body() data: CreateStadionDto,
   ) {
-    return this.stadionsService.create(data, images );
+    return this.stadionsService.create(data, images);
   }
 
   @Get()
