@@ -23,22 +23,22 @@ import { UserService } from "./user.service";
 @UsePipes(ValidationPipe)
 export class UsersController {
   constructor(private readonly userService: UserService) {}
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Get()
   findAll(@Query() query: QueryDto) {
     return this.userService.list(query);
   }
 
 
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Get("inxlsx")
   async exportToExcel(@Res() res: Response) {
     return this.userService.exe(res);
   }
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Get("amonth")
   async aMonthAddedUsers() {
     return this.userService.aMonthUsers();
@@ -50,8 +50,8 @@ export class UsersController {
     return this.userService.showme(req);
   }
 
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.userService.show(id);

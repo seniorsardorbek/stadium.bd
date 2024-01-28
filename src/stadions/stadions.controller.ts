@@ -49,8 +49,8 @@ export class StadionsController {
   findOne(@Param("id") id: string) {
     return this.stadionsService.findOne(id);
   }
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.stadionsService.remove(id);

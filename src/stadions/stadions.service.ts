@@ -49,7 +49,7 @@ export class StadionsService {
     sort,
     nearby
   }: QueryDto): Promise<PaginationResponse<Stadion>> {
-    try {
+    // try {
       const { limit, offset } = page || {}
       const { by = 'year', order = 'desc' } = sort || {}
       const { lat, lng, maxDistance } = nearby || {}
@@ -81,13 +81,13 @@ export class StadionsService {
         .limit(limit)
       .skip(limit * offset)
       return { limit, offset, total: data?.length, data }
-    } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false ,
-        error 
-      })
-    }
+    // } catch (error) {
+    //   throw new BadRequestException({
+    //     msg: "Birozdan so'ng urinib koring...",
+    //     success: false ,
+    //     error 
+    //   })
+    // }
   }
 
   // ? find One

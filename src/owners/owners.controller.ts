@@ -44,15 +44,15 @@ export class OwnersController {
     return this.ownersService.findOne(id);
   }
 
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateOwnerDto: UpdateOwnerDto) {
     return this.ownersService.update(id, updateOwnerDto);
   }
 
-  @SetRoles("admin")
-  @UseGuards(IsLoggedIn, HasRole)
+  // @SetRoles("admin")
+  // @UseGuards(IsLoggedIn, HasRole)
   @Delete(":id")
   remove(@Param("id") id: string) {
     return this.ownersService.remove(id);
