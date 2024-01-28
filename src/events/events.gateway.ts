@@ -32,6 +32,7 @@ export class EventsGateway {
 
   @WebSocketServer()
   server: Server;
+  
 
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {

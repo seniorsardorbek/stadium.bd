@@ -78,6 +78,8 @@ export class StadionsService {
       const data = await this.stadionModel
         .find({ ...search, ...isHere })
         .sort({ [by]: order })
+        .limit(limit)
+      .skip(limit * offset)
       return { limit, offset, total: data?.length, data }
     } catch (error) {
       throw new BadRequestException({
