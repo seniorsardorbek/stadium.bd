@@ -134,11 +134,11 @@ export class BookingsService {
     })
     if (!isPossible) {
       throw new BadRequestException({
-        msg: 'Stadion tasdiqlangan, Bu holatda siz ochira olmaysiz!',
+        msg: 'Stadion tasdiqlangan, Bu holatda siz o\'chira olmaysiz!',
         succes: false
       })
     }
-    await this.bookingModel.findOneAndRemove({ bookingBy: _id, _id: id })
+    await this.bookingModel.findOneAndDelete({ bookingBy: _id, _id: id })
     return { msg: 'Mufaqqiyatli bekor qilindi!' }
     } catch (error) {
       throw new BadRequestException({
