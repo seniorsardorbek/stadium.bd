@@ -40,8 +40,8 @@ export class Filter {
 @ValidatorConstraint({ name: "isPhoneNumber", async: false })
 class IsPhoneNumberConstraint implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {
-    const phoneNumberRegex =
-      /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|78|33|20)[0-9]{7}$/;
+    const phoneNumberRegex = /^\+\d{3}-\d{2}-\d{3}-\d{2}-\d{2}$/;
+    ;
     return phoneNumberRegex.test(value);
   }
 

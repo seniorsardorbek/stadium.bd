@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
+import { Stadion } from "src/stadions/Schema/Schema";
 
 export type OwnerDocument = HydratedDocument<Owner>;
 
@@ -29,7 +30,7 @@ export class Owner {
     unique: true,
     validate: {
       validator: function (value) {
-        return /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|33|20)[0-9]{7}$/.test(
+        return /^\+\d{3}-\d{2}-\d{3}-\d{2}-\d{2}$/.test(
           value,
         );
       },
@@ -52,3 +53,13 @@ export class Owner {
 }
 
 export const OwnerSchema = SchemaFactory.createForClass(Owner);
+
+
+OwnerSchema.virtual('stadiums', {
+  ref: 'Stadion',
+  localField: '_id',
+  foreignField: 'owner',
+})
+
+OwnerSchema.set('toObject', { virtuals: true })
+OwnerSchema.set('toJSON', { virtuals: true })

@@ -30,7 +30,7 @@ export class OwnersService {
     sort
   }: QueryDto): Promise<PaginationResponse<Owner>> {
     try {
-      const { limit, offset } = page || {}
+      const { limit = 10, offset =0 } = page || {}
       const { by, order = 'desc' } = sort || {}
       const search = q
         ? {
@@ -43,7 +43,8 @@ export class OwnersService {
       const total = await this.ownerModel.find({ ...search }).countDocuments()
       const data = await this.ownerModel
         .find({ ...search })
-        // .select('-password')
+        .populate({path :"stadiums"})
+        .select('-password')
         .sort({ [by]: order === 'desc' ? -1 : 1 })
         .limit(limit)
         .skip(limit * offset)
@@ -84,7 +85,7 @@ export class OwnersService {
       const existPhone = await this.ownerModel.findOne({
         callnumber: data.callnumber
       })
-      if (existEmail && existPhone) {
+      if (existEmail || existPhone) {
         throw new BadRequestException(
           'Elektron pochtadan yoki mobil raqamdan  allaqacon foydalanilgan!'
         )
@@ -103,7 +104,12 @@ export class OwnersService {
         }
       }
     } catch (error) {
-      throw error
+      
+      throw new BadRequestException({
+        msg: "Birozdan so'ng urinib koring...",
+        success: false,
+        error
+      })
     }
   }
   async login (data: LoginOwnerDto) {

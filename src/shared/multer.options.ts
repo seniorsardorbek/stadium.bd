@@ -1,16 +1,15 @@
-import { MulterModuleOptions } from "@nestjs/platform-express";
-import multer, { diskStorage } from "multer";
-import { extname } from "path";
+import { diskStorage } from 'multer'
+import { extname } from 'path'
 
 export const multerOptions = {
   storage: diskStorage({
-    destination: "./uploads",
+    destination: './uploads',
     filename: (req, file, callback) => {
       const uniqueSuffix =
-        (req.body.name || "minimatch") + "-" + Math.round(Math.random() * 1e5);
-      const extension = extname(file.originalname);
-      const customFilename = `${uniqueSuffix}${extension}`;
-      callback(null, customFilename);
-    },
-  }),
-};
+        (req.body.name || 'minimatch') + '-' + Math.round(Math.random() * 1e5)
+      const extension = extname(file.originalname)
+      const customFilename = `${uniqueSuffix}${extension}`
+      callback(null, customFilename)
+    }
+  })
+}

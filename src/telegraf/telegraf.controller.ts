@@ -12,7 +12,6 @@ export class TelegrefController {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   @Start()
   async start(@Ctx() ctx: TelegrafContext) {
-    console.log();
     const { first_name } = ctx.message.from;
 
     const htmlTemplate = "<b> Assalom alaykum  {{name}}!</b>";

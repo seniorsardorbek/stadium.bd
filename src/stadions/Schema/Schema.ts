@@ -39,15 +39,6 @@ export class Stadion {
   @Prop({
     type: String,
     required: true,
-    unique: true,
-    validate: {
-      validator: function (value) {
-        return /^\+998(90|91|93|94|95|97|98|99|50|55|88|77|33|20)[0-9]{7}$/.test(
-          value,
-        );
-      },
-      message: "Invalid phone number format",
-    },
   })
   callnumber: string;
   @Prop({

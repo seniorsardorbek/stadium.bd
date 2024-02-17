@@ -26,8 +26,13 @@ export class UsersController {
   // @SetRoles("admin")
   // @UseGuards(IsLoggedIn, HasRole)
   @Get()
+  
+  
+
   findAll(@Query() query: QueryDto) {
+    console.log(2);
     return this.userService.list(query);
+
   }
 
 
