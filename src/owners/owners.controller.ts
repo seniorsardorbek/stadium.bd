@@ -24,6 +24,7 @@ export class OwnersController {
   // @UseGuards(IsLoggedIn , HasRole )
   @Post("register")
   register(@Body() createOwnerDto: CreateOwnerDto) {
+    console.log("hello");
     return this.ownersService.register(createOwnerDto);
   }
 

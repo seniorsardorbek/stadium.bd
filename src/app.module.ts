@@ -27,13 +27,13 @@ import { TelegrafModule } from "nestjs-telegraf";
     MulterModule.register({
       dest: "./uploads",
     }),
-    TelegrafModule.forRoot({
-      token: "6831641712:AAECquuFPVUsc2wzmI5ClEc09nOfyX803Dc",
-      include: [],
-    }),
+    // TelegrafModule.forRoot({
+    //   token: "6831641712:AAECquuFPVUsc2wzmI5ClEc09nOfyX803Dc",
+    //   include: [],
+    // }),
     StadionsModule,
     UserModule,
-    TelegrafModulee,
+    // TelegrafModulee,
     AuthModule,
     CommentsModule,
     BookingsModule,

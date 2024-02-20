@@ -79,6 +79,7 @@ export class OwnersService {
   // ? create owner 100%
   async register (data: CreateOwnerDto) {
     try {
+      console.log("slaom");
       const existEmail = await this.ownerModel.findOne({
         email: data.email
       })
@@ -92,21 +93,15 @@ export class OwnersService {
       }
       const hash = await bcrypt.hash(data.password, 15)
       data.password = hash
-      const owner = await this.ownerModel.create(data)
+      this.ownerModel.create(data)
       return {
         msg: "Mufaqqiyatli  ro'yxatdan o'tkazildi!",
         succes: true,
-        data: {
-          id: owner._id,
-          name: owner.name,
-          email: owner.email,
-          callnumber: owner.callnumber
-        }
       }
     } catch (error) {
       
       throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
+        msg: "Birozdan so'ng urinib ko'ring...",
         success: false,
         error
       })

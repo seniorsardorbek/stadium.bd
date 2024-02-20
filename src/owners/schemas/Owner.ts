@@ -28,14 +28,6 @@ export class Owner {
     type: String,
     required: true,
     unique: true,
-    validate: {
-      validator: function (value) {
-        return /^\+\d{3}-\d{2}-\d{3}-\d{2}-\d{2}$/.test(
-          value,
-        );
-      },
-      message: "Invalid phone number format",
-    },
   })
   callnumber: string;
 
