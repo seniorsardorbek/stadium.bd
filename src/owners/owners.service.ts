@@ -79,7 +79,6 @@ export class OwnersService {
   // ? create owner 100%
   async register (data: CreateOwnerDto) {
     try {
-      console.log("slaom");
       const existEmail = await this.ownerModel.findOne({
         email: data.email
       })

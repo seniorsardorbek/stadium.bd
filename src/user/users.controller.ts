@@ -9,13 +9,9 @@ import {
   Delete,
   Get,
   Req,
-  Res,
   UsePipes
 } from "@nestjs/common/decorators";
-import { Response } from "express";
-import { HasRole } from "src/auth/has-roles.guard";
 import { IsLoggedIn } from "src/auth/is-loggin.guard";
-import { SetRoles } from "src/auth/set-roles.decorator";
 import { CustomRequest } from "src/shared/types/types";
 import { QueryDto } from "./dto/query.dto";
 import { UserService } from "./user.service";
@@ -26,28 +22,13 @@ export class UsersController {
   // @SetRoles("admin")
   // @UseGuards(IsLoggedIn, HasRole)
   @Get()
-  
-  
-
   findAll(@Query() query: QueryDto) {
-    console.log(2);
     return this.userService.list(query);
-
   }
 
 
-  // @SetRoles("admin")
-  // @UseGuards(IsLoggedIn, HasRole)
-  @Get("inxlsx")
-  async exportToExcel(@Res() res: Response) {
-    return this.userService.exe(res);
-  }
-  // @SetRoles("admin")
-  // @UseGuards(IsLoggedIn, HasRole)
-  @Get("amonth")
-  async aMonthAddedUsers() {
-    return this.userService.aMonthUsers();
-  }
+
+
 
   @UseGuards(IsLoggedIn)
   @Get("/me")
