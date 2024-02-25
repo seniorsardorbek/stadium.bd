@@ -42,7 +42,6 @@ export class UserService {
       throw new NotFoundException('User topilmadi.')
     }
     return {
-      msg: 'Mufaqqiyatli olindi',
       succes: true,
       data: user
     }
@@ -55,7 +54,6 @@ export class UserService {
       throw new NotFoundException('User topilmadi.')
     }
     return {
-      msg: 'Mufaqqiyatli olindi',
       succes: true,
       data: user
     }
@@ -84,7 +82,6 @@ export class UserService {
       })
       .select('-password')
     return {
-      msg: 'Mufaqqiyatli olindi',
       succes: true,
       data: user
     }
