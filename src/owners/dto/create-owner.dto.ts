@@ -14,6 +14,7 @@ export class CreateOwnerDto {
   @IsPhoneNumber({ message: "Invalid phone number format." })
   callnumber: string;
 }
+
 export class LoginOwnerDto {
   @IsString()
   email: string;

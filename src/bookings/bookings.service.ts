@@ -20,31 +20,28 @@ export class BookingsService {
   async create (data: CreateBookingDto, req: CustomRequest) {
     try {
       const { _id } = req.user
-      const exist = await this.bookingModel.find({
+      const exist = await this.bookingModel.findOne({
         stadion: data.stadion,
         from: data.from
       })
       const { owner } = await this.stadionModel.findById(data.stadion)
-
-      if (exist[0]) {
+      if (exist) {
         throw new BadRequestException({
           msg: 'Bu vaqtda stadion bron qilingan!'
         })
       }
-
       await this.bookingModel.create({ ...data, bookingBy: _id })
-
       this.socketService.sendMessage({
         to: owner,
         message: 'Sizning stadioningiz  bron qilindi',
         by: _id
       })
-
       return { msg: 'Muvaffaqqiyatli booking qilindi!' }
     } catch (error) {
       throw new BadRequestException({
         msg: "Birozdan so'ng urinib koring...",
-        success: false
+        success: false,
+        error
       })
     }
   }
@@ -71,9 +68,12 @@ export class BookingsService {
       })
     }
   }
-  findOnePersonBookings (req: CustomRequest) {
+  async findOnePersonBookings ({ page, sort }: QueryDto, req: CustomRequest) {
+    const { limit = 10, offset = 0 } = page || {}
+    const { by, order = 'desc' } = sort || {}
     const { _id } = req.user
-    return this.bookingModel
+    const total = await this.bookingModel.find({ bookingBy: _id })
+    const data = await this.bookingModel
       .find({ bookingBy: _id })
       .populate([
         {
@@ -90,7 +90,11 @@ export class BookingsService {
           select: 'name  email '
         }
       ])
+      .sort({ [by]: order === 'desc' ? -1 : 1 })
+      .limit(limit)
+      .skip(limit * offset)
       .exec()
+    return { limit, offset, total, data }
   }
 
   async confirmed (req: CustomRequest, id: string, data: StatusBookingDto) {
@@ -112,7 +116,7 @@ export class BookingsService {
         )} vaqtli o'yin uchun ajrtaildi!`,
         by: _id
       })
-      return {msg : "Oke"}
+      return { msg: 'Oke' }
     } catch (error) {
       throw new BadRequestException({
         msg: "Birozdan so'ng urinib koring...",
@@ -128,25 +132,24 @@ export class BookingsService {
   async removeMyBooking (id: string, req: CustomRequest) {
     try {
       const { _id } = req.user
-    const isPossible = await this.bookingModel.find({
-      _id: id,
-      status: 'confirmed'
-    })
-    if (!isPossible) {
-      throw new BadRequestException({
-        msg: 'Stadion tasdiqlangan, Bu holatda siz o\'chira olmaysiz!',
-        succes: false
+      const isPossible = await this.bookingModel.find({
+        _id: id,
+        status: 'confirmed'
       })
-    }
-    await this.bookingModel.findOneAndDelete({ bookingBy: _id, _id: id })
-    return { msg: 'Mufaqqiyatli bekor qilindi!' }
+      if (!isPossible) {
+        throw new BadRequestException({
+          msg: "Stadion tasdiqlangan, Bu holatda siz o'chira olmaysiz!",
+          succes: false
+        })
+      }
+      await this.bookingModel.findOneAndDelete({ bookingBy: _id, _id: id })
+      return { msg: 'Mufaqqiyatli bekor qilindi!' }
     } catch (error) {
       throw new BadRequestException({
         msg: "Birozdan so'ng urinib koring...",
         success: false
       })
     }
-    
   }
 
   remove (id: string) {

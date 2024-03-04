@@ -29,19 +29,20 @@ export class BookingsController {
   @UseGuards(IsLoggedIn)
   @Post()
   async create(@Body() data: CreateBookingDto, @Req() req: CustomRequest) {
-    const newBooking = await this.bookingsService.create(data, req);
-    return newBooking;
+    return this.bookingsService.create(data, req);
   }
-
-  @UseGuards(IsLoggedIn)
-  @Get('booking/me')
-  findOnePersonBookings(@Req() req: CustomRequest) {
-    return this.bookingsService.findOnePersonBookings(req);
-  }
-  @Get('')
+  
+  @Get()
   findAll(@Query() query: QueryDto) {
     return this.bookingsService.findAll(query);
   }
+
+  @UseGuards(IsLoggedIn)
+  @Get('/me')
+  findOnePersonBookings(@Req() req: CustomRequest , @Query() query: QueryDto) {
+    return this.bookingsService.findOnePersonBookings(query , req);
+  }
+  
 
   @Get(":id")
   findOneStadions(@Param("id") id: string) {
