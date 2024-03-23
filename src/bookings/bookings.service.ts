@@ -1,14 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable
+} from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { EventsGateway } from 'src/events/events.gateway'
+import { QueryDto } from 'src/shared/dto/query.dto'
+import { PaginationResponse } from 'src/shared/respone/response'
 import { CustomRequest } from 'src/shared/types/types'
 import { formatDateWithMonthNames } from 'src/shared/utils/utils'
 import { Stadion } from 'src/stadions/Schema/Schema'
 import { Booking } from './Schema/Schema'
 import { CreateBookingDto, StatusBookingDto } from './dto/create-booking.dto'
-import { QueryDto } from 'src/shared/dto/query.dto'
-import { PaginationResponse } from 'src/shared/respone/response'
 
 @Injectable()
 export class BookingsService {
@@ -20,14 +25,25 @@ export class BookingsService {
   async create (data: CreateBookingDto, req: CustomRequest) {
     try {
       const { _id } = req.user
-      const exist = await this.bookingModel.findOne({
+      const isBooked = await this.bookingModel.findOne({
         stadion: data.stadion,
-        from: data.from
+        from: data.from,
+        status: 'confirmed'
       })
-      const { owner } = await this.stadionModel.findById(data.stadion)
-      if (exist) {
+      if (isBooked) {
         throw new BadRequestException({
           msg: 'Bu vaqtda stadion bron qilingan!'
+        })
+      }
+      const isUserRequested = await this.bookingModel.findOne({
+        stadion: data.stadion,
+        from: data.from,
+        bookingBy: _id
+      })
+      const { owner } = await this.stadionModel.findById(data.stadion)
+      if (isUserRequested) {
+        throw new BadRequestException({
+          msg: 'Iltimos kuting..!'
         })
       }
       await this.bookingModel.create({ ...data, bookingBy: _id })
@@ -36,13 +52,15 @@ export class BookingsService {
         message: 'Sizning stadioningiz  bron qilindi',
         by: _id
       })
-      return { msg: 'Muvaffaqqiyatli booking qilindi!' }
+      return { msg: 'Muvaffaqqiyatli bron qilindi!' }
     } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false,
-        error
-      })
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
     }
   }
 
@@ -54,7 +72,7 @@ export class BookingsService {
       const { limit = 10, offset = 0 } = page || {}
       const { by, order = 'desc' } = sort || {}
 
-      const total = await this.bookingModel.find().countDocuments()
+      const total = await this.bookingModel.countDocuments()
       const data = await this.bookingModel
         .find()
         .sort({ [by]: order === 'desc' ? -1 : 1 })
@@ -62,39 +80,54 @@ export class BookingsService {
         .skip(limit * offset)
       return { limit, offset, total, data }
     } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false
-      })
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
     }
   }
   async findOnePersonBookings ({ page, sort }: QueryDto, req: CustomRequest) {
-    const { limit = 10, offset = 0 } = page || {}
-    const { by, order = 'desc' } = sort || {}
-    const { _id } = req.user
-    const total = await this.bookingModel.find({ bookingBy: _id })
-    const data = await this.bookingModel
-      .find({ bookingBy: _id })
-      .populate([
-        {
-          path: 'stadion',
-          populate: {
-            path: 'owner',
-            model: 'Owner',
-            select: 'name  email '
+    try {
+      const { limit = 10, offset = 0 } = page || {}
+      const { by, order = 'desc' } = sort || {}
+      const { _id } = req.user
+      const total = await this.bookingModel
+        .find({ bookingBy: _id })
+        .countDocuments()
+      const data = await this.bookingModel
+        .find({ bookingBy: _id })
+        .populate([
+          {
+            path: 'stadion',
+            populate: {
+              path: 'owner',
+              model: 'Owner',
+              select: 'name  email '
+            },
+            select: 'destination callnumber'
           },
-          select: 'destination callnumber'
-        },
-        {
-          path: 'bookingBy',
-          select: 'name  email '
-        }
-      ])
-      .sort({ [by]: order === 'desc' ? -1 : 1 })
-      .limit(limit)
-      .skip(limit * offset)
-      .exec()
-    return { limit, offset, total, data }
+          {
+            path: 'bookingBy',
+            select: 'name  email '
+          }
+        ])
+        .sort({ [by]: order === 'desc' ? -1 : 1 })
+        .limit(limit)
+        .skip(limit * offset)
+        .exec()
+      return { limit, offset, total, data }
+    } catch (error) {
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
+    }
   }
 
   async confirmed (req: CustomRequest, id: string, data: StatusBookingDto) {
@@ -118,15 +151,28 @@ export class BookingsService {
       })
       return { msg: 'Oke' }
     } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false
-      })
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
     }
   }
 
   findOneStadions (id: string) {
-    return this.bookingModel.find({ stadion: id, status: 'confirmed' })
+    try {
+      return this.bookingModel.find({ stadion: id, status: 'confirmed' })
+    } catch (error) {
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.CONFLICT
+        )
+      }
+      throw error
+    }
   }
 
   async removeMyBooking (id: string, req: CustomRequest) {
@@ -145,14 +191,30 @@ export class BookingsService {
       await this.bookingModel.findOneAndDelete({ bookingBy: _id, _id: id })
       return { msg: 'Mufaqqiyatli bekor qilindi!' }
     } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false
-      })
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
     }
   }
 
-  remove (id: string) {
-    return `This action removes a #${id} booking`
+  async remove (id: string) {
+    try {
+      const deleted = await this.bookingModel.findByIdAndDelete(id)
+      if (deleted) {
+        return { msg: 'Mufaqqiyatli ochirildi!' }
+      }
+    } catch (error) {
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        )
+      }
+      throw error
+    }
   }
 }
