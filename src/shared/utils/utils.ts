@@ -5,18 +5,18 @@ export function formatDateWithMonthNames(timestamp: number) {
   const date = new Date(timestamp);
 
   const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Yanvar",
+    "Fevral",
+    "Mart",
+    "Aprel",
     "May",
-    "June",
-    "July",
+    "Iyun",
+    "Iyul",
     "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Sentyabr",
+    "Oktyabr",
+    "Noyabr",
+    "Dekabr",
   ];
 
   const day = date.getDate();
@@ -24,7 +24,7 @@ export function formatDateWithMonthNames(timestamp: number) {
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const formattedDate = `${month} ${day}, ${hours}:${
-    0 <= minutes && minutes <= 9 ? `0${minutes}` : minutes
+    0 <= minutes && minutes <= 9 ? `0${minutes}`:minutes
   }`;
   return formattedDate;
 }

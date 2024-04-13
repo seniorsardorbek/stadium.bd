@@ -1,45 +1,54 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { HydratedDocument } from 'mongoose'
 
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<User>
 
 @Schema({
   versionKey: false,
   timestamps: {
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-  },
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+  }
 })
 export class User {
   @Prop({
     type: String,
-    required: true,
+    required: true
   })
-  name: string;
+  name: string
 
   @Prop({
     type: String,
-    unique: true,
+    unique: true
   })
-  phonenumber: string;
+  phonenumber: string
+  @Prop({
+    type: String,
+    unique: true
+  })
+  username: string
   @Prop({
     type: Number,
     required: true,
-    unique: true,
+    unique: true
   })
-  verification: number;
+  verification: number
 
   @Prop({
     type: Number,
-    required: true,
+    required: true
   })
-  chatId: number;
+  chatId: number
 
   @Prop({
     type: String,
-    default: "player",
+    default: 'player'
   })
-  role: string;
+  role: string
+  @Prop({
+    type: String
+  })
+  action: string
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User)

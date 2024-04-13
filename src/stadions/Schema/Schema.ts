@@ -87,6 +87,7 @@ export class Stadion {
       index: "2dsphere"; // Use a 2dsphere index for geospatial queries
     };
   };
+  title: any;
 }
 
 export const StadionSchema = SchemaFactory.createForClass(Stadion);

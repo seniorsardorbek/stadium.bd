@@ -1,56 +1,58 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
-import { Stadion } from "src/stadions/Schema/Schema";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import { HydratedDocument } from 'mongoose'
+import { Stadion } from 'src/stadions/Schema/Schema'
 
-export type OwnerDocument = HydratedDocument<Owner>;
+export type OwnerDocument = HydratedDocument<Owner>
 
 @Schema({
   versionKey: false,
   timestamps: {
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-  },
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+  }
 })
 export class Owner {
   @Prop({
     type: String,
-    required: true,
+    required: true
   })
-  name: string;
-
+  name: string
   @Prop({
     type: String,
-    unique: true,
   })
-  email: string;
-
+  phone: string
   @Prop({
     type: String,
-    required: true,
-    unique: true,
+    required: true
   })
-  callnumber: string;
-
+  chatId: string
   @Prop({
     type: String,
-    required: true,
+    required: true
   })
-  password: string;
-
+  action: string
+  @Prop({
+    type: Boolean,
+    default : false
+  })
+  isVerified: boolean
+  @Prop({
+    type: Boolean,
+    default : true
+  })
+  status: boolean
   @Prop({
     type: String,
-    default: "owner",
   })
-  role: string;
+  username: string
 }
 
-export const OwnerSchema = SchemaFactory.createForClass(Owner);
-
+export const OwnerSchema = SchemaFactory.createForClass(Owner)
 
 OwnerSchema.virtual('stadiums', {
   ref: 'Stadion',
   localField: '_id',
-  foreignField: 'owner',
+  foreignField: 'owner'
 })
 
 OwnerSchema.set('toObject', { virtuals: true })

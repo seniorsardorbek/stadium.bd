@@ -1,28 +1,24 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
-  NotFoundException,
-  Res,
-  UnauthorizedException
+  NotFoundException
 } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
 import { InjectModel } from '@nestjs/mongoose'
-import * as bcrypt from 'bcryptjs'
-import { Response } from 'express'
 import { Model } from 'mongoose'
 import { QueryDto } from 'src/shared/dto/query.dto'
 import { PaginationResponse } from 'src/shared/respone/response'
-import * as XLSX from 'xlsx'
-import { CreateOwnerDto, LoginOwnerDto } from './dto/create-owner.dto'
-import { UpdateOwnerDto } from './dto/update-owner.dto'
 import { Owner } from './schemas/Owner'
-import config from 'src/shared/config'
+import { CreateOwnerDto } from './dto/create-owner.dto'
+import { OwnerBotUpdate } from './ownerbot.controller'
+import { MENU } from 'src/shared/keyboards'
 
 @Injectable()
 export class OwnersService {
   constructor (
     @InjectModel(Owner.name) private ownerModel: Model<Owner>,
-    private readonly jwtService: JwtService
+    private readonly ownerBotService: OwnerBotUpdate
   ) {}
   async findAll ({
     page,
@@ -30,7 +26,7 @@ export class OwnersService {
     sort
   }: QueryDto): Promise<PaginationResponse<Owner>> {
     try {
-      const { limit = 10, offset =0 } = page || {}
+      const { limit = 10, offset = 0 } = page || {}
       const { by, order = 'desc' } = sort || {}
       const search = q
         ? {
@@ -43,7 +39,7 @@ export class OwnersService {
       const total = await this.ownerModel.find({ ...search }).countDocuments()
       const data = await this.ownerModel
         .find({ ...search })
-        .populate({path :"stadiums"})
+        .populate({ path: 'stadiums' })
         .select('-password')
         .sort({ [by]: order === 'desc' ? -1 : 1 })
         .limit(limit)
@@ -56,7 +52,48 @@ export class OwnersService {
       })
     }
   }
-
+  async register (id: string, verifyAdminDto: CreateOwnerDto) {
+    try {
+      const verifiedAdmin = await this.ownerModel.findByIdAndUpdate(
+        id,
+        { isVerified: verifyAdminDto.verified },
+        { new: true }
+      )
+      if (verifiedAdmin) {
+        this.ownerBotService.sendMessage(
+          verifiedAdmin?.chatId,
+          `${
+            verifyAdminDto.verified
+              ? 'Tasdiqlandi ✅'
+              : 'Tasdiqlash bekor qilindi ❌'
+          }`,
+          {
+            reply_markup: {
+              remove_keyboard: !verifyAdminDto.verified,
+              ...(verifyAdminDto.verified ? MENU : {}),
+            }
+          }
+        )
+        return {
+          msg: `${
+            verifyAdminDto.verified
+              ? 'Tasdiqlandi!'
+              : 'Tasdiqlash bekor qilindi!'
+          }`,
+          verifiedAdmin
+        }
+      }
+      return "Admin mavjud emas!"
+    } catch (error) {
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.CONFLICT
+        )
+      }
+      throw error
+    }
+  }
   // ? getone 100%
   async findOne (id: string) {
     try {
@@ -72,141 +109,6 @@ export class OwnersService {
       throw new BadRequestException({
         msg: "Birozdan so'ng urinib koring...",
         success: false
-      })
-    }
-  }
-
-  // ? create owner 100%
-  async register (data: CreateOwnerDto) {
-    try {
-      const existEmail = await this.ownerModel.findOne({
-        email: data.email
-      })
-      const existPhone = await this.ownerModel.findOne({
-        callnumber: data.callnumber
-      })
-      if (existEmail || existPhone) {
-        throw new BadRequestException(
-          'Elektron pochtadan yoki mobil raqamdan  allaqacon foydalanilgan!'
-        )
-      }
-      const hash = await bcrypt.hash(data.password, 15)
-      data.password = hash
-      this.ownerModel.create(data)
-      return {
-        msg: "Mufaqqiyatli  ro'yxatdan o'tkazildi!",
-        succes: true,
-      }
-    } catch (error) {
-      
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib ko'ring...",
-        success: false,
-        error
-      })
-    }
-  }
-  async login (data: LoginOwnerDto) {
-    try {
-      const { email, password } = data
-      const owner = await this.ownerModel.findOne({ email })
-      if (!owner) {
-        throw new UnauthorizedException(
-          'Elektron pochta yoki parolingingiz xato!'
-        )
-      }
-      const isPasswordValid = await bcrypt.compare(password, owner.password)
-      if (!isPasswordValid) {
-        throw new UnauthorizedException(
-          'Elektron pochta yoki parolingingiz xato!'
-        )
-      }
-      const { _id, role } = owner
-      const token = await this.jwtService.signAsync(
-        { _id, role },
-        { secret: config.jwt.secret }
-      )
-      return {
-        message: 'Mufaqqiyatli kirdingiz!',
-        token,
-        data: { id: owner._id, name: owner.name, email: owner.email }
-      }
-    } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false,
-        error
-      })
-    }
-  }
-  // ? update 100%
-  async update (id: string, data: UpdateOwnerDto) {
-    try {
-      const exist = await this.ownerModel.findById(id)
-      if (!exist) {
-        throw new NotFoundException('Owner topilmadi.')
-      }
-      if (data.password) {
-        const hash = await bcrypt.hash(data.password, 15)
-        data.password = hash
-      }
-      const user = await this.ownerModel.findByIdAndUpdate(id, data, {
-        new: true
-      })
-      return {
-        msg: 'Mufaqqiyatli yangilandi',
-        succes: true,
-        data: user
-      }
-    } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false,
-        error
-      })
-    }
-  }
-
-  // ? delete 100%
-  async remove (id: string) {
-    try {
-      const exist = await this.ownerModel.findById(id)
-      if (!exist) {
-        throw new NotFoundException('Owner topilmadi.')
-      }
-      await this.ownerModel.findByIdAndDelete(id)
-      return {
-        msg: "Mufaqqiyatli o'chirildi",
-        succes: true
-      }
-    } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false,
-        error
-      })
-    }
-  }
-
-  async exe (@Res() res: Response) {
-    try {
-      const data = await this.ownerModel.find().exec() // Fetch data from MongoDB
-      const jsonData = data.map((item: any) => item.toObject()) // Convert Mongoose documents to plain objects
-      const ws = XLSX.utils.json_to_sheet(jsonData)
-      const wb = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(wb, ws, 'DataSheet')
-      const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' })
-      res.setHeader('Content-Disposition', 'attachment; filename=owners.xlsx')
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      )
-      res.send(excelBuffer)
-    } catch (error) {
-      throw new BadRequestException({
-        msg: "Birozdan so'ng urinib koring...",
-        success: false,
-        error
       })
     }
   }
