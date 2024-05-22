@@ -54,6 +54,49 @@ export class OwnersService {
   }
   async register (id: string, verifyAdminDto: CreateOwnerDto) {
     try {
+      console.log(verifyAdminDto);
+      const verifiedAdmin = await this.ownerModel.findByIdAndUpdate(
+        id,
+        { isVerified: verifyAdminDto.verified },
+        { new: true }
+      )
+      if (verifiedAdmin) {
+        this.ownerBotService.sendMessage(
+          verifiedAdmin?.chatId,
+          `${
+            verifyAdminDto.verified
+              ? 'Tasdiqlandi ✅'
+              : 'Tasdiqlash bekor qilindi ❌'
+          }`,
+          {
+            reply_markup: {
+              remove_keyboard: !verifyAdminDto.verified,
+              ...(verifyAdminDto.verified ? MENU : {}),
+            }
+          }
+        )
+        return {
+          msg: `${
+            verifyAdminDto.verified
+              ? 'Tasdiqlandi!'
+              : 'Tasdiqlash bekor qilindi!'
+          }`,
+          verifiedAdmin
+        }
+      }
+      return "Admin mavjud emas!"
+    } catch (error) {
+      if (!(error instanceof HttpException)) {
+        error = new HttpException(
+          error.message || "Birozdan so'ng urinib ko'ring",
+          HttpStatus.CONFLICT
+        )
+      }
+      throw error
+    }
+  }
+  async verify (id: string, verifyAdminDto: CreateOwnerDto) {
+    try {
       const verifiedAdmin = await this.ownerModel.findByIdAndUpdate(
         id,
         { isVerified: verifyAdminDto.verified },

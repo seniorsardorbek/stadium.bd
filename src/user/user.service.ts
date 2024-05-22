@@ -26,7 +26,7 @@ export class UserService {
             }
           }
         : {}
-
+          
       const total = await this.userModel.find({ ...search }).countDocuments()
 
       const data = await this.userModel
